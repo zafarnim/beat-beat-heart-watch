@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Heart, ChevronRight, CheckCircle2, Play, Bell, AlertTriangle, HelpCircle } from 'lucide-react';
+import { Heart, ChevronRight, CheckCircle2, Play, Bell, AlertTriangle, HelpCircle, Hospital } from 'lucide-react';
 import kryLogo from '@/assets/kry-logo.png';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
@@ -164,7 +164,7 @@ const Dashboard = () => {
                           scan.sent_to_kry ? 'text-success' : 'text-muted-foreground hover:text-foreground'
                         }`}
                       >
-                        {scan.sent_to_kry ? <CheckCircle2 className="h-4 w-4" /> : <img src={kryLogo} alt="Kry" className="h-5 w-5 rounded" />}
+                        {scan.sent_to_kry ? <CheckCircle2 className="h-4 w-4" /> : <Hospital className="h-5 w-5" />}
                       </button>
                     )}
                     <ChevronRight className="h-4 w-4 text-muted-foreground" />
