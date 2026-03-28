@@ -184,7 +184,7 @@
 .glass-bg::before {
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, hsl(261 30% 86% / 0.6), transparent 70%);
+  background: radial-gradient(circle, hsl(290 25% 90% / 0.5), transparent 70%);
   top: -10%;
   right: -10%;
   animation-delay: 0s;
@@ -193,7 +193,7 @@
 .glass-bg::after {
   width: 400px;
   height: 400px;
-  background: radial-gradient(circle, hsl(270 30% 80% / 0.4), transparent 70%);
+  background: radial-gradient(circle, hsl(280 20% 92% / 0.4), transparent 70%);
   bottom: 10%;
   left: -10%;
   animation-delay: -10s;
