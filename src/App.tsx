@@ -11,6 +11,7 @@ import Index from "./pages/Index";
 import Scan from "./pages/Scan";
 import ScanDetail from "./pages/ScanDetail";
 import Settings from "./pages/Settings";
+import History from "./pages/History";
 import NotFound from "./pages/NotFound";
 import BottomNav from "./components/BottomNav";
 
