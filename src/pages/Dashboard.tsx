@@ -255,7 +255,7 @@ const Dashboard = () => {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <span className="font-medium text-sm text-foreground">{scan.result_title}</span>
-                      <span className={`text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-full ${config.labelClass}`}>
+                      <span className={`text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-full translate-y-px ${config.labelClass}`}>
                         {config.label}
                       </span>
                     </div>
