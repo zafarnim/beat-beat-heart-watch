@@ -155,8 +155,8 @@ const Scan = () => {
       <div className="flex flex-1 flex-col items-center justify-center px-5 pb-10">
         {phase === 'position' && (
           <div className="flex flex-col items-center gap-6 text-center animate-in fade-in duration-300">
-            <div className="flex h-24 w-24 items-center justify-center rounded-2xl bg-muted/50">
-              <Smartphone className="h-12 w-12 text-foreground" />
+            <div className="w-48 h-48 rounded-2xl overflow-hidden">
+              <video src={phoneHeartbeatVideo} autoPlay loop muted playsInline className="w-full h-full object-cover rounded-2xl" />
             </div>
             <h2 className="font-display text-2xl font-bold text-foreground">Position Your Phone</h2>
             <p className="max-w-xs text-sm text-muted-foreground">
