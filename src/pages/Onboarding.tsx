@@ -48,14 +48,6 @@ const Onboarding = ({ onComplete }: { onComplete: () => void }) => {
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
 
-        {/* Top dots */}
-        <div className="relative z-10 flex justify-end p-6">
-          <div className="flex gap-1.5">
-            {[0, 1, 2].map(i => (
-              <div key={i} className={`h-2 w-2 rounded-full ${i === 0 ? 'bg-white' : 'bg-white/40'}`} />
-            ))}
-          </div>
-        </div>
 
         {/* Bottom content */}
         <div className="relative z-10 mt-auto px-6 pb-28">
