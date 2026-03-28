@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Heart, Smartphone, Loader2, X, Bell } from 'lucide-react';
+import { Heart, Loader2, X, Bell } from 'lucide-react';
+import phoneHeartbeatVideo from '@/assets/phone-heartbeat.mp4';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
