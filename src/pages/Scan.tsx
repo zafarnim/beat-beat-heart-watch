@@ -251,9 +251,9 @@ const Scan = () => {
             <Button
               size="lg"
               className="mt-4 w-full max-w-xs rounded-full text-lg font-semibold bg-gradient-to-r from-muted-foreground to-foreground text-primary-foreground py-7"
-              onClick={startRecording}
+              onClick={() => setPhase('ready')}
             >
-              I'm Ready
+              Next
             </Button>
 
             <div className="flex items-center gap-3 w-full max-w-xs mt-2">
