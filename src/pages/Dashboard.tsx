@@ -215,7 +215,7 @@ const Dashboard = () => {
         <div className="flex items-center justify-between mb-4">
           <h2 className="font-display text-lg font-bold text-foreground">Recent Activity</h2>
           {scans.length > 3 && (
-            <span className="text-xs font-medium tracking-widest uppercase text-muted-foreground">View All</span>
+            <button onClick={() => navigate('/history')} className="text-xs font-medium tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors">View All</button>
           )}
         </div>
 
