@@ -13,4 +13,10 @@ const Index = () => {
   return <Dashboard />;
 };
 
-export default Index;
+export { Index as default };
+export { type FC } from 'react';
+
+// Re-export onboarded state for BottomNav visibility
+export const useOnboardedState = () => {
+  return getSettings().onboarded;
+};
