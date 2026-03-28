@@ -179,6 +179,9 @@ const Dashboard = () => {
         </div>
       </div>
 
+      {/* Health Stats */}
+      <HealthStats scanDates={scans.map(s => s.created_at)} />
+
       {/* Recommended Steps */}
       {visibleSteps.length > 0 && (
         <div className="mb-8">
