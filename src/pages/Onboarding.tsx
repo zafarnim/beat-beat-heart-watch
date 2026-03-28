@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Heart, ChevronRight, HelpCircle, X } from 'lucide-react';
+import { Heart, ChevronRight, HelpCircle, X, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { saveSettings } from '@/lib/storage';
 import { DEFAULT_SETTINGS, UserSettings } from '@/lib/types';
+import onboardingHero from '@/assets/onboarding-hero.jpg';
 
 const CONDITIONS_SUGGESTIONS = ['Hypertension', 'Arrhythmia', 'Heart failure', 'Diabetes', 'Asthma'];
 
@@ -33,6 +34,57 @@ const Onboarding = ({ onComplete }: { onComplete: () => void }) => {
 
   const totalSteps = 3;
 
+  {/* Step 0: Welcome — full-screen hero */}
+  if (step === 0) {
+    return (
+      <div className="fixed inset-0 flex flex-col animate-in fade-in duration-700">
+        <img
+          src={onboardingHero}
+          alt="Serene sunset meditation"
+          className="absolute inset-0 h-full w-full object-cover"
+          width={960}
+          height={1920}
+        />
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+
+        {/* Top dots */}
+        <div className="relative z-10 flex justify-end p-6">
+          <div className="flex gap-1.5">
+            {[0, 1, 2].map(i => (
+              <div key={i} className={`h-2 w-2 rounded-full ${i === 0 ? 'bg-white' : 'bg-white/40'}`} />
+            ))}
+          </div>
+        </div>
+
+        {/* Bottom content */}
+        <div className="relative z-10 mt-auto px-6 pb-10">
+          <p className="text-sm font-medium tracking-widest uppercase text-white/70 mb-3">Beat Beat</p>
+          <h1 className="font-display text-[2.2rem] font-bold leading-[1.15] text-white">
+            Discover a new<br />world of wellness<br />and serenity
+          </h1>
+
+          {/* CTA row */}
+          <div className="mt-8 flex items-center gap-3">
+            <button
+              onClick={() => setStep(1)}
+              className="flex h-14 w-14 items-center justify-center rounded-full bg-white text-black shadow-lg"
+            >
+              <ArrowRight className="h-5 w-5" />
+            </button>
+            <button
+              onClick={() => setStep(1)}
+              className="flex items-center gap-2 rounded-full bg-white/15 backdrop-blur-md border border-white/20 px-6 py-3.5 text-sm font-semibold text-white"
+            >
+              Join Now
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex min-h-screen flex-col px-6 pb-8 pt-6 relative overflow-hidden bg-background">
       {/* Header */}
@@ -49,29 +101,6 @@ const Onboarding = ({ onComplete }: { onComplete: () => void }) => {
           </div>
         )}
       </div>
-
-      {/* Step 0: Welcome */}
-      {step === 0 && (
-        <div className="flex flex-1 flex-col justify-center animate-in fade-in duration-500">
-          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-accent/40 mb-8">
-            <Heart className="h-10 w-10 text-foreground" />
-          </div>
-          <h1 className="font-display text-4xl font-bold tracking-tight text-foreground leading-tight">
-            Listen to<br />your <em className="font-serif italic text-muted-foreground">heart.</em>
-          </h1>
-          <p className="mt-4 text-base text-muted-foreground leading-relaxed max-w-sm">
-            Beat Beat utilizes advanced ML algorithms to detect subtle cardiac patterns, providing clinical-grade health insights from the palm of your hand.
-          </p>
-          <Button
-            size="lg"
-            className="mt-10 w-full rounded-full text-lg font-semibold bg-gradient-to-r from-muted-foreground to-foreground text-primary-foreground py-7"
-            onClick={() => setStep(1)}
-          >
-            Get Started
-            <ChevronRight className="ml-1 h-5 w-5" />
-          </Button>
-        </div>
-      )}
 
       {/* Step 1: Profile */}
       {step === 1 && (
