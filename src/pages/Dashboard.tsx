@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Heart, ChevronRight, CheckCircle2, Play, AlertTriangle, HelpCircle, Hospital, Settings, Circle, CheckCircle } from 'lucide-react';
 import WeekStreak from '@/components/WeekStreak';
+import HealthStats from '@/components/dashboard/HealthStats';
 import kryLogo from '@/assets/kry-logo.png';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
