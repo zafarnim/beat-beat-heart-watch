@@ -245,7 +245,7 @@ const Dashboard = () => {
           </div>
         ) : (
           <div className="space-y-2">
-            {scans.map(scan => {
+            {scans.slice(0, 3).map(scan => {
               const config = resultConfig[scan.result];
               const Icon = config.icon;
               return (
