@@ -280,6 +280,32 @@ const Scan = () => {
           </div>
         )}
 
+        {phase === 'ready' && (
+          <div className="flex flex-col items-center gap-6 text-center animate-in fade-in duration-300">
+            <p className="text-xs tracking-widest uppercase text-muted-foreground">Ready to Record</p>
+            <p className="font-display text-6xl font-bold tabular-nums text-foreground">{formatTime(SCAN_DURATION)}</p>
+
+            <div className="relative my-4">
+              <div className="relative flex h-36 w-36 items-center justify-center rounded-full bg-gradient-to-br from-muted-foreground/60 to-foreground/60 shadow-2xl">
+                <Heart className="h-14 w-14 text-primary-foreground/60" />
+              </div>
+            </div>
+
+            <p className="text-sm text-muted-foreground max-w-xs">
+              Place your phone against your chest, then tap the button below to begin recording.
+            </p>
+
+            <Button
+              size="lg"
+              className="mt-2 w-full max-w-xs rounded-full text-lg font-semibold bg-gradient-to-r from-muted-foreground to-foreground text-primary-foreground py-7"
+              onClick={startRecording}
+            >
+              <Heart className="mr-2 h-5 w-5" />
+              Start Recording
+            </Button>
+          </div>
+        )}
+
         {phase === 'recording' && (
           <div className="flex flex-col items-center gap-6 text-center animate-in fade-in duration-300">
             <p className="text-xs tracking-widest uppercase text-muted-foreground">Scanning Vital Signs</p>
