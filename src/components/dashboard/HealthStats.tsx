@@ -1,4 +1,4 @@
-import { Activity, HeartPulse } from 'lucide-react';
+import { Heart, HeartPulse } from 'lucide-react';
 import { useMemo } from 'react';
 
 interface ScanStat {
