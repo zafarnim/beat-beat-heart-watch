@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Heart, ChevronRight, HelpCircle, X, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import AgeDialSelector from '@/components/AgeDialSelector';
 import { saveSettings } from '@/lib/storage';
 import { DEFAULT_SETTINGS, UserSettings } from '@/lib/types';
 import onboardingHero from '@/assets/onboarding-hero.jpg';
