@@ -158,6 +158,9 @@ const Dashboard = () => {
           }} />
           <div className="relative z-10">
             <p className="text-xs tracking-widest uppercase text-primary-foreground/60 mb-3">Heart Health Monitoring</p>
+            <div className="mb-4">
+              <WeekStreak scanDates={scans.map(s => s.created_at)} />
+            </div>
             <h2 className="font-display text-2xl font-bold text-primary-foreground leading-tight">
               Ready for your<br />daily check?
             </h2>
