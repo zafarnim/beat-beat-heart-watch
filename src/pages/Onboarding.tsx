@@ -95,25 +95,16 @@ const Onboarding = ({ onComplete }: { onComplete: () => void }) => {
       {/* Step 1: Profile */}
       {step === 1 && (
         <div className="flex flex-1 flex-col animate-in slide-in-from-right duration-300">
-          <h1 className="font-display text-3xl font-bold text-foreground leading-tight">
-            Let's build your<br /><em className="font-serif italic text-muted-foreground">health profile.</em>
+          <h1 className="font-display text-3xl font-bold text-foreground leading-tight text-center">
+            How old<br /><em className="font-serif italic text-muted-foreground">are you?</em>
           </h1>
-          <p className="mt-3 text-base text-muted-foreground">
-            To provide clinical-grade insights, we need to understand your baseline.
-          </p>
 
-          <div className="mt-8 space-y-6 flex-1">
-            {/* Age */}
-            <div>
-              <label className="text-xs font-medium tracking-widest uppercase text-muted-foreground">Age</label>
-              <Input
-                type="number"
-                value={settings.age}
-                onChange={e => setSettings({ ...settings, age: Number(e.target.value) })}
-                min={1} max={120}
-                className="mt-2 h-14 rounded-2xl border-0 bg-muted/50 text-lg px-5"
-              />
-            </div>
+          <div className="mt-6 flex-1 space-y-8">
+            {/* Age Dial */}
+            <AgeDialSelector
+              value={settings.age}
+              onChange={age => setSettings({ ...settings, age })}
+            />
 
             {/* Sex */}
             <div>
