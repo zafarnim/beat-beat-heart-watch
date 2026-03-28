@@ -10,6 +10,7 @@ import onboardingHero from '@/assets/onboarding-hero.jpg';
 const CONDITIONS_SUGGESTIONS = ['Hypertension', 'Arrhythmia', 'Heart failure', 'Diabetes', 'Asthma'];
 
 const Onboarding = ({ onComplete }: { onComplete: () => void }) => {
+  const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [settings, setSettings] = useState<UserSettings>({ ...DEFAULT_SETTINGS });
   const [newCondition, setNewCondition] = useState('');
