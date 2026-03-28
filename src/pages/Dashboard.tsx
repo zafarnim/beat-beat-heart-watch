@@ -79,6 +79,7 @@ const Dashboard = () => {
   };
 
   const recommendedSteps = useMemo<RecommendedStep[]>(() => {
+    const seen = new Set<string>();
     const steps: RecommendedStep[] = [];
     scans
       .filter(s => s.result === 'clear_classification' && s.recommended_steps)
@@ -88,6 +89,9 @@ const Dashboard = () => {
           .map(l => l.trim())
           .filter(l => l.length > 0);
         lines.forEach((text, i) => {
+          const normalized = text.toLowerCase();
+          if (seen.has(normalized)) return;
+          seen.add(normalized);
           steps.push({
             scanId: scan.id,
             stepIndex: i,
@@ -100,8 +104,12 @@ const Dashboard = () => {
     return steps;
   }, [scans]);
 
-  const handleToggleStep = (scanId: string, stepIndex: number) => {
-    const key = `${scanId}_${stepIndex}`;
+  const visibleSteps = useMemo(() => {
+    return recommendedSteps.filter(s => !completedSteps.includes(s.text.toLowerCase()));
+  }, [recommendedSteps, completedSteps]);
+
+  const handleToggleStep = (text: string) => {
+    const key = text.toLowerCase();
     const updated = toggleCompletedStep(key);
     setCompletedSteps(updated);
   };
