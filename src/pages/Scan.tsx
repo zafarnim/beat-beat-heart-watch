@@ -325,18 +325,12 @@ const Scan = () => {
               Keep your finger steady on the sensor and breathe naturally.
             </p>
 
-            <div className="flex items-end gap-0.5 h-12 mt-2">
-              {Array.from({ length: 30 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="w-1.5 rounded-full bg-muted-foreground/30 animate-pulse"
-                  style={{
-                    height: `${Math.max(8, Math.random() * 40 + 8)}px`,
-                    animationDelay: `${i * 50}ms`,
-                  }}
-                />
-              ))}
-            </div>
+            <LiveWaveform
+              stream={mediaStream}
+              isRecording={phase === 'recording'}
+              elapsed={SCAN_DURATION - countdown}
+              duration={SCAN_DURATION}
+            />
           </div>
         )}
 
