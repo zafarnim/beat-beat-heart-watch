@@ -51,23 +51,16 @@ const App = () => {
         <Sonner />
         <BrowserRouter>
           <div className="glass-bg" />
-          <div className="relative mx-auto max-w-md min-h-screen">
-            {session ? (
-              <>
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/scan" element={<Scan />} />
-                  <Route path="/scan/:id" element={<ScanDetail />} />
-                  <Route path="/settings" element={<Settings />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-                <BottomNav />
-              </>
-            ) : (
+            <div className="relative mx-auto max-w-md min-h-screen">
               <Routes>
-                <Route path="*" element={<Auth />} />
+                <Route path="/" element={<Index />} />
+                <Route path="/scan" element={<Scan />} />
+                <Route path="/scan/:id" element={<ScanDetail />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="/auth" element={<Auth />} />
+                <Route path="*" element={<NotFound />} />
               </Routes>
-            )}
+              <BottomNav />
           </div>
         </BrowserRouter>
       </TooltipProvider>
