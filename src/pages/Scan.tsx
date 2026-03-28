@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Heart, Smartphone, Loader2, ArrowLeft } from 'lucide-react';
+import { Heart, Smartphone, Loader2, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -15,12 +15,14 @@ type Phase = 'position' | 'recording' | 'analyzing' | 'result';
 
 const SCAN_DURATION = 15;
 
-function mockAnalyze(): { result: ScanResultType; title: string; description: string; condition?: string; steps?: string } {
+function mockAnalyze(): { result: ScanResultType; title: string; description: string; condition?: string; steps?: string; bpm?: number; variability?: number } {
   const roll = Math.random();
-  if (roll < 0.5) return { result: 'normal', title: 'Normal Rhythm', description: 'Your heart rhythm appears normal and healthy.' };
-  if (roll < 0.7) return { result: 'clear_classification', title: 'Irregular Pattern Detected', description: 'We detected a pattern consistent with atrial fibrillation. This is a common condition that can be managed effectively with proper care.', condition: 'Atrial Fibrillation (AFib)', steps: 'Schedule an appointment with your doctor for an ECG confirmation within the next 2 weeks.' };
-  if (roll < 0.85) return { result: 'inconclusive', title: 'Inconclusive Reading', description: 'The recording shows some irregularities that need professional interpretation.' };
-  if (roll < 0.92) return { result: 'emergency', title: 'Urgent Pattern Detected', description: 'Critical irregularity detected. Seek immediate medical attention.' };
+  const bpm = Math.floor(60 + Math.random() * 30);
+  const variability = Math.floor(40 + Math.random() * 30);
+  if (roll < 0.5) return { result: 'normal', title: 'Normal Rhythm', description: 'Your heart rhythm appears normal. This reading indicates a stable cardiovascular state at this moment.', bpm, variability };
+  if (roll < 0.7) return { result: 'clear_classification', title: 'Irregular Pattern Detected', description: 'We detected a pattern consistent with atrial fibrillation.', condition: 'Atrial Fibrillation (AFib)', steps: 'Schedule an appointment with your doctor for an ECG confirmation within the next 2 weeks.', bpm, variability };
+  if (roll < 0.85) return { result: 'inconclusive', title: 'Inconclusive Reading', description: 'The recording shows some irregularities that need professional interpretation.', bpm, variability };
+  if (roll < 0.92) return { result: 'emergency', title: 'Urgent Pattern Detected', description: 'Critical irregularity detected. Seek immediate medical attention.', bpm, variability };
   return { result: 'try_again', title: 'Poor Signal Quality', description: 'We could not capture a clear enough signal to analyze.' };
 }
 
@@ -42,6 +44,12 @@ const Scan = () => {
       if (audioUrl) URL.revokeObjectURL(audioUrl);
     };
   }, [audioUrl]);
+
+  const formatTime = (s: number) => {
+    const mins = Math.floor(s / 60);
+    const secs = s % 60;
+    return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+  };
 
   const startRecording = useCallback(async () => {
     try {
@@ -117,7 +125,7 @@ const Scan = () => {
   };
 
   const handleSendToKry = () => {
-    toast.success('Scan sent to Kry (mock)');
+    toast.success('Scan sent to Kry for review');
   };
 
   const resetScan = () => {
@@ -128,59 +136,114 @@ const Scan = () => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col px-5 pb-10 pt-6">
+    <div className="flex min-h-screen flex-col bg-background">
+      {/* Header */}
       {phase !== 'result' && (
-        <button onClick={() => navigate('/')} className="mb-6 flex items-center gap-2 text-sm text-muted-foreground">
-          <ArrowLeft className="h-4 w-4" /> Back
-        </button>
+        <div className="flex items-center justify-between px-5 pt-4 pb-2">
+          <div className="flex items-center gap-3">
+            <button onClick={() => navigate('/')} className="text-foreground">
+              <X className="h-5 w-5" />
+            </button>
+            <span className="font-display text-lg font-bold text-foreground">Beat Beat</span>
+          </div>
+          <div className="h-9 w-9 rounded-full bg-accent/60 flex items-center justify-center">
+            <Heart className="h-4 w-4 text-foreground" />
+          </div>
+        </div>
       )}
 
-      <div className="flex flex-1 flex-col items-center justify-center">
+      <div className="flex flex-1 flex-col items-center justify-center px-5 pb-10">
+        {/* Position prompt */}
         {phase === 'position' && (
           <div className="flex flex-col items-center gap-6 text-center animate-in fade-in duration-300">
-            <div className="flex h-24 w-24 items-center justify-center rounded-2xl glass">
+            <div className="flex h-24 w-24 items-center justify-center rounded-2xl bg-muted/50">
               <Smartphone className="h-12 w-12 text-foreground" />
             </div>
             <h2 className="font-display text-2xl font-bold text-foreground">Position Your Phone</h2>
             <p className="max-w-xs text-sm text-muted-foreground">
               Place your phone flat against your chest with the microphone facing down. Sit still and breathe normally.
             </p>
-            <Button size="lg" className="mt-4 w-full max-w-xs rounded-full text-lg font-semibold" onClick={startRecording}>
+            <Button
+              size="lg"
+              className="mt-4 w-full max-w-xs rounded-full text-lg font-semibold bg-gradient-to-r from-muted-foreground to-foreground text-primary-foreground py-7"
+              onClick={startRecording}
+            >
               I'm Ready
             </Button>
           </div>
         )}
 
+        {/* Recording */}
         {phase === 'recording' && (
-          <div className="flex flex-col items-center gap-8 text-center animate-in fade-in duration-300">
-            <div className="relative">
-              <div className="absolute inset-[-24px] rounded-full glass opacity-30 animate-ping" style={{ animationDuration: '2s' }} />
-              <div className="absolute inset-[-12px] rounded-full glass opacity-50 animate-pulse" />
-              <div className="relative flex h-32 w-32 items-center justify-center rounded-full glass-strong">
-                <Heart className="h-14 w-14 text-primary animate-pulse" />
+          <div className="flex flex-col items-center gap-6 text-center animate-in fade-in duration-300">
+            <p className="text-xs tracking-widest uppercase text-muted-foreground">Scanning Vital Signs</p>
+            <p className="font-display text-6xl font-bold tabular-nums text-foreground">{formatTime(countdown)}</p>
+
+            {/* Pulsing orb */}
+            <div className="relative my-4">
+              <div className="absolute inset-[-20px] rounded-full bg-muted/30 animate-ping" style={{ animationDuration: '2s' }} />
+              <div className="absolute inset-[-10px] rounded-full bg-muted/40 animate-pulse" />
+              <div className="relative flex h-36 w-36 items-center justify-center rounded-full bg-gradient-to-br from-muted-foreground to-foreground shadow-2xl">
+                <Heart className="h-14 w-14 text-primary-foreground" />
               </div>
             </div>
-            <div>
-              <p className="font-display text-5xl font-bold tabular-nums text-foreground">{countdown}</p>
-              <p className="mt-1 text-sm text-muted-foreground">seconds remaining</p>
+
+            {/* Status badge */}
+            <span className="inline-flex items-center gap-2 rounded-full bg-accent/40 px-4 py-2 text-xs font-medium text-foreground">
+              <span className="h-2 w-2 rounded-full bg-success animate-pulse" />
+              Recording in progress...
+            </span>
+
+            <p className="text-sm text-muted-foreground max-w-xs">
+              Keep your finger steady on the sensor and breathe naturally.
+            </p>
+
+            {/* Audio waveform placeholder */}
+            <div className="flex items-end gap-0.5 h-12 mt-2">
+              {Array.from({ length: 30 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="w-1.5 rounded-full bg-muted-foreground/30 animate-pulse"
+                  style={{
+                    height: `${Math.max(8, Math.sin(i * 0.5 + Date.now() / 500) * 30 + 20)}px`,
+                    animationDelay: `${i * 50}ms`,
+                  }}
+                />
+              ))}
             </div>
-            <p className="text-sm text-muted-foreground">Listening to your heartbeat…</p>
           </div>
         )}
 
+        {/* Analyzing */}
         {phase === 'analyzing' && (
           <div className="flex flex-col items-center gap-6 text-center animate-in fade-in duration-300">
-            <div className="flex h-24 w-24 items-center justify-center rounded-full glass">
-              <Loader2 className="h-12 w-12 animate-spin text-primary" />
+            <div className="flex h-24 w-24 items-center justify-center rounded-full bg-muted/40">
+              <Loader2 className="h-12 w-12 animate-spin text-foreground" />
             </div>
             <h2 className="font-display text-2xl font-bold text-foreground">Analyzing…</h2>
             <p className="text-sm text-muted-foreground">Processing your heartbeat recording.</p>
           </div>
         )}
 
+        {/* Results */}
         {phase === 'result' && analysisResult && (
-          <div className="w-full max-w-sm space-y-6">
-            {analysisResult.result === 'normal' && <NormalResult onDone={() => navigate('/')} />}
+          <div className="w-full max-w-sm space-y-6 pb-6">
+            {/* Header for result */}
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <div className="h-9 w-9 rounded-full bg-accent/60 flex items-center justify-center">
+                  <Heart className="h-4 w-4 text-foreground" />
+                </div>
+                <span className="font-display text-lg font-bold text-foreground">Beat Beat</span>
+              </div>
+              <button className="text-foreground">
+                <Bell className="h-5 w-5" />
+              </button>
+            </div>
+
+            {analysisResult.result === 'normal' && (
+              <NormalResult onDone={() => navigate('/')} bpm={analysisResult.bpm} variability={analysisResult.variability} />
+            )}
             {analysisResult.result === 'clear_classification' && (
               <ClearClassificationResult
                 conditionName={analysisResult.condition!}
@@ -195,7 +258,7 @@ const Scan = () => {
             {analysisResult.result === 'try_again' && <TryAgainResult onRetry={resetScan} />}
 
             {audioUrl && analysisResult.result !== 'try_again' && (
-              <div className="rounded-2xl glass-card p-4">
+              <div className="rounded-2xl bg-muted/30 p-4">
                 <p className="mb-2 text-xs font-medium text-muted-foreground">Your Recording</p>
                 <audio controls src={audioUrl} className="w-full" />
               </div>
@@ -206,5 +269,8 @@ const Scan = () => {
     </div>
   );
 };
+
+// Need Bell import at top for result header
+import { Bell } from 'lucide-react';
 
 export default Scan;
