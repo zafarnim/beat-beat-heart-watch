@@ -13,7 +13,7 @@ import EmergencyResult from '@/components/results/EmergencyResult';
 import TryAgainResult from '@/components/results/TryAgainResult';
 import WaveformPlayer from '@/components/WaveformPlayer';
 
-type Phase = 'position' | 'recording' | 'analyzing' | 'result';
+type Phase = 'position' | 'ready' | 'recording' | 'analyzing' | 'result';
 
 const SCAN_DURATION = 15;
 
