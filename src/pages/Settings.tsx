@@ -97,6 +97,22 @@ const Settings = () => {
           </p>
         </CardContent>
       </Card>
+
+      <Card className="mt-4 border-0 shadow-sm">
+        <CardContent className="pt-6">
+          <Button
+            variant="outline"
+            className="w-full rounded-full"
+            onClick={async () => {
+              await supabase.auth.signOut();
+              navigate('/');
+            }}
+          >
+            <LogOut className="mr-2 h-4 w-4" />
+            Log Out
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   );
 };
