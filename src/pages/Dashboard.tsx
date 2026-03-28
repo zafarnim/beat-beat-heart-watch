@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Heart, ChevronRight, CheckCircle2, Play, Bell, AlertTriangle, HelpCircle, Hospital } from 'lucide-react';
+import logo from '@/assets/logo.svg';
 import kryLogo from '@/assets/kry-logo.png';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
@@ -75,14 +76,8 @@ const Dashboard = () => {
       {/* Header */}
       <div className="flex items-center justify-between px-5 mb-6">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-full bg-accent/60 flex items-center justify-center">
-            <Heart className="h-5 w-5 text-foreground" />
-          </div>
-          <h1 className="font-display text-xl font-bold text-foreground">Beat Beat</h1>
+          <img src={logo} alt="Beat Beat" className="h-10 w-10" />
         </div>
-        <button className="h-10 w-10 rounded-full flex items-center justify-center">
-          <Bell className="h-5 w-5 text-foreground" />
-        </button>
       </div>
 
       {/* Hero CTA Card */}
