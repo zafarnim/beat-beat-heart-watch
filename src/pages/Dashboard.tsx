@@ -266,7 +266,7 @@ const Dashboard = () => {
                       <button
                         onClick={(e) => sendToKry(scan.id, e)}
                         disabled={scan.sent_to_kry}
-                        className={`h-8 w-8 rounded-full flex items-center justify-center transition-colors ${
+                        className={`h-8 w-8 rounded-full flex items-center justify-center transition-colors translate-y-px ${
                           scan.sent_to_kry ? 'text-success' : 'text-muted-foreground hover:text-foreground'
                         }`}
                       >
