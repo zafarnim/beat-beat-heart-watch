@@ -55,7 +55,7 @@ const WeekStreak = ({ scanDates }: WeekStreakProps) => {
         </div>
         {streakCount > 0 && (
           <span className="text-xs font-bold text-primary-foreground/80">
-            🔥 {streakCount} day{streakCount > 1 ? 's' : ''}
+            {streakCount} day{streakCount > 1 ? 's' : ''}
           </span>
         )}
       </div>
