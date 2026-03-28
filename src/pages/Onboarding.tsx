@@ -71,12 +71,6 @@ const Onboarding = ({ onComplete }: { onComplete: () => void }) => {
           <div className="mt-8 flex items-center gap-3">
             <button
               onClick={() => setStep(1)}
-              className="flex h-14 w-14 items-center justify-center rounded-full bg-white text-black shadow-lg"
-            >
-              <ArrowRight className="h-5 w-5" />
-            </button>
-            <button
-              onClick={() => setStep(1)}
               className="flex items-center gap-2 rounded-full bg-white/15 backdrop-blur-md border border-white/20 px-6 py-3.5 text-sm font-semibold text-white"
             >
               Join Now
