@@ -76,6 +76,8 @@ const Dashboard = () => {
         created_at: row.created_at,
         sent_to_kry: row.sent_to_kry,
         file_url: row.recordings?.file_url ?? null,
+        bpm: row.bpm ?? null,
+        hrv_ms: row.hrv_ms ?? null,
       }));
       setScans(mapped);
     }
