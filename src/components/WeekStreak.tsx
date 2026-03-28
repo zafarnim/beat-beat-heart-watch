@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Check, Zap } from 'lucide-react';
 
-const DAY_LABELS = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+const DAY_LABELS_FULL = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
 
 interface WeekStreakProps {
   scanDates: string[];
