@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { saveSettings } from '@/lib/storage';
 import { DEFAULT_SETTINGS, UserSettings } from '@/lib/types';
+import { lovable } from '@/integrations/lovable/index';
+import { toast } from 'sonner';
 
 const CONDITIONS_SUGGESTIONS = ['Hypertension', 'Arrhythmia', 'Heart failure', 'Diabetes', 'Asthma'];
 
