@@ -9,6 +9,7 @@ import type { Session } from "@supabase/supabase-js";
 import Auth from "./pages/Auth";
 import Index from "./pages/Index";
 import Scan from "./pages/Scan";
+import ScanDetail from "./pages/ScanDetail";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import BottomNav from "./components/BottomNav";
