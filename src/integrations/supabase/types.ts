@@ -41,6 +41,50 @@ export type Database = {
         }
         Relationships: []
       }
+      scans: {
+        Row: {
+          condition_name: string | null
+          created_at: string
+          id: string
+          recommended_steps: string | null
+          recording_id: string | null
+          result: Database["public"]["Enums"]["scan_result"]
+          result_description: string
+          result_title: string
+          sent_to_kry: boolean
+        }
+        Insert: {
+          condition_name?: string | null
+          created_at?: string
+          id?: string
+          recommended_steps?: string | null
+          recording_id?: string | null
+          result: Database["public"]["Enums"]["scan_result"]
+          result_description: string
+          result_title: string
+          sent_to_kry?: boolean
+        }
+        Update: {
+          condition_name?: string | null
+          created_at?: string
+          id?: string
+          recommended_steps?: string | null
+          recording_id?: string | null
+          result?: Database["public"]["Enums"]["scan_result"]
+          result_description?: string
+          result_title?: string
+          sent_to_kry?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scans_recording_id_fkey"
+            columns: ["recording_id"]
+            isOneToOne: false
+            referencedRelation: "recordings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -49,7 +93,12 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      scan_result:
+        | "normal"
+        | "clear_classification"
+        | "inconclusive"
+        | "emergency"
+        | "try_again"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -176,6 +225,14 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      scan_result: [
+        "normal",
+        "clear_classification",
+        "inconclusive",
+        "emergency",
+        "try_again",
+      ],
+    },
   },
 } as const

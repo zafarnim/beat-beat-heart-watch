@@ -1,31 +1,6 @@
-import { HeartRateReading, UserSettings, DEFAULT_SETTINGS } from './types';
+import { UserSettings, DEFAULT_SETTINGS } from './types';
 
-const READINGS_KEY = 'beatbeat_readings';
 const SETTINGS_KEY = 'beatbeat_settings';
-
-export function getReadings(): HeartRateReading[] {
-  try {
-    const data = localStorage.getItem(READINGS_KEY);
-    return data ? JSON.parse(data) : [];
-  } catch {
-    return [];
-  }
-}
-
-export function saveReading(reading: HeartRateReading): void {
-  const readings = getReadings();
-  readings.unshift(reading);
-  localStorage.setItem(READINGS_KEY, JSON.stringify(readings));
-}
-
-export function deleteReading(id: string): void {
-  const readings = getReadings().filter(r => r.id !== id);
-  localStorage.setItem(READINGS_KEY, JSON.stringify(readings));
-}
-
-export function clearAllReadings(): void {
-  localStorage.removeItem(READINGS_KEY);
-}
 
 export function getSettings(): UserSettings {
   try {
@@ -41,6 +16,5 @@ export function saveSettings(settings: UserSettings): void {
 }
 
 export function clearAllData(): void {
-  localStorage.removeItem(READINGS_KEY);
   localStorage.removeItem(SETTINGS_KEY);
 }
