@@ -130,9 +130,22 @@ const Dashboard = () => {
             ))}
           </div>
         ) : scans.length === 0 ? (
-          <div className="rounded-2xl bg-muted/30 py-12 text-center">
-            <Heart className="mx-auto h-10 w-10 text-muted-foreground/30" />
-            <p className="mt-3 text-sm text-muted-foreground">No scans yet. Start your first one!</p>
+          <div className="rounded-2xl bg-muted/30 py-16 text-center flex flex-col items-center">
+            <div className="h-20 w-20 rounded-full bg-accent/40 flex items-center justify-center mb-4">
+              <Heart className="h-10 w-10 text-muted-foreground/50" />
+            </div>
+            <h3 className="font-display text-lg font-semibold text-foreground mb-1">No scans yet</h3>
+            <p className="text-sm text-muted-foreground max-w-[220px]">
+              Record your first heartbeat scan to see your heart health insights here.
+            </p>
+            <Button
+              variant="outline"
+              className="mt-5 rounded-full px-6"
+              onClick={() => navigate('/scan')}
+            >
+              <Heart className="mr-2 h-4 w-4" />
+              Start Your First Scan
+            </Button>
           </div>
         ) : (
           <div className="space-y-2">
