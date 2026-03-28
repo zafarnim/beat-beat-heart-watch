@@ -184,7 +184,7 @@ const Dashboard = () => {
       </div>
 
       {/* Health Stats */}
-      <HealthStats scanDates={scans.map(s => s.created_at)} />
+      <HealthStats scans={scans} />
 
       {/* Recommended Steps */}
       {visibleSteps.length > 0 && (
