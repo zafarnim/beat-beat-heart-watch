@@ -285,24 +285,16 @@ const Scan = () => {
             <p className="text-xs tracking-widest uppercase text-muted-foreground">Ready to Record</p>
             <p className="font-display text-6xl font-bold tabular-nums text-foreground">{formatTime(SCAN_DURATION)}</p>
 
-            <div className="relative my-4">
-              <div className="relative flex h-36 w-36 items-center justify-center rounded-full bg-gradient-to-br from-muted-foreground/60 to-foreground/60 shadow-2xl">
-                <Heart className="h-14 w-14 text-primary-foreground/60" />
+            <button className="relative my-4 group" onClick={startRecording}>
+              <div className="absolute inset-[-12px] rounded-full bg-muted/20 group-hover:bg-muted/40 transition-colors" />
+              <div className="relative flex h-36 w-36 items-center justify-center rounded-full bg-gradient-to-br from-muted-foreground/60 to-foreground/60 shadow-2xl group-hover:from-muted-foreground group-hover:to-foreground transition-all cursor-pointer">
+                <Heart className="h-14 w-14 text-primary-foreground/70 group-hover:text-primary-foreground transition-colors" />
               </div>
-            </div>
+            </button>
 
             <p className="text-sm text-muted-foreground max-w-xs">
-              Place your phone against your chest, then tap the button below to begin recording.
+              Tap the heart to start recording your heartbeat.
             </p>
-
-            <Button
-              size="lg"
-              className="mt-2 w-full max-w-xs rounded-full text-lg font-semibold bg-gradient-to-r from-muted-foreground to-foreground text-primary-foreground py-7"
-              onClick={startRecording}
-            >
-              <Heart className="mr-2 h-5 w-5" />
-              Start Recording
-            </Button>
           </div>
         )}
 
