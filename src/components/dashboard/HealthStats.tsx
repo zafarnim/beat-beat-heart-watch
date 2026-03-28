@@ -50,31 +50,27 @@ const HealthStats = ({ scans }: HealthStatsProps) => {
 
   return (
     <div className="grid grid-cols-2 gap-3 px-5 mb-8">
-      {/* Weekly BPM */}
+      {/* Latest BPM */}
       <div className="rounded-2xl bg-card p-4">
         <div className="flex items-center gap-1.5 mb-2">
-          <Activity className="h-3.5 w-3.5 text-muted-foreground" />
-          <span className="text-[10px] font-bold tracking-widest uppercase text-muted-foreground">Weekly BPM</span>
+          <Heart className="h-3.5 w-3.5 text-destructive fill-destructive" />
+          <span className="text-[10px] font-bold tracking-widest uppercase text-muted-foreground">Heart Rate</span>
         </div>
-        {hasData && stats.avgBpm != null ? (
+        {hasData && stats.latestBpm != null ? (
           <>
+            <p className="text-xs text-muted-foreground mb-0.5">Latest</p>
             <div className="flex items-baseline gap-1">
-              <span className="text-3xl font-bold text-foreground">{stats.avgBpm}</span>
-              <span className="text-sm text-muted-foreground">avg</span>
+              <span className="text-3xl font-bold text-foreground">{stats.latestBpm}</span>
+              <span className="text-sm text-muted-foreground">BPM</span>
             </div>
-            {stats.bpmDiff != null && (
-              <p className={`text-xs mt-1 ${stats.bpmDiff <= 0 ? 'text-success' : 'text-destructive'}`}>
-                {stats.bpmDiff <= 0 ? '↓' : '↑'} {Math.abs(stats.bpmDiff)}% vs last week
-              </p>
-            )}
           </>
         ) : (
           <>
+            <p className="text-xs text-muted-foreground/40 mb-0.5">Latest</p>
             <div className="flex items-baseline gap-1">
               <span className="text-3xl font-bold text-muted-foreground/30">--</span>
-              <span className="text-sm text-muted-foreground/30">avg</span>
+              <span className="text-sm text-muted-foreground/30">BPM</span>
             </div>
-            <p className="text-xs mt-1 text-muted-foreground/40">No data yet</p>
           </>
         )}
       </div>
