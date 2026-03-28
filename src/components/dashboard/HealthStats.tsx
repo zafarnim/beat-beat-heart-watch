@@ -1,42 +1,52 @@
 import { Activity, HeartPulse } from 'lucide-react';
 import { useMemo } from 'react';
 
-interface HealthStatsProps {
-  scanDates: string[];
+interface ScanStat {
+  bpm?: number | null;
+  hrv_ms?: number | null;
+  created_at: string;
 }
 
-// Generate deterministic mock BPM/HRV from scan dates for demo
-const seedFromDate = (dateStr: string) => {
-  let hash = 0;
-  for (let i = 0; i < dateStr.length; i++) {
-    hash = (hash << 5) - hash + dateStr.charCodeAt(i);
-    hash |= 0;
-  }
-  return Math.abs(hash);
-};
+interface HealthStatsProps {
+  scans: ScanStat[];
+}
 
-const HealthStats = ({ scanDates }: HealthStatsProps) => {
+const HealthStats = ({ scans }: HealthStatsProps) => {
   const stats = useMemo(() => {
-    if (scanDates.length === 0) return null;
+    const withBpm = scans.filter(s => s.bpm != null);
+    const withHrv = scans.filter(s => s.hrv_ms != null);
 
-    const recentDates = scanDates.slice(0, 7);
-    const bpms = recentDates.map(d => 58 + (seedFromDate(d) % 30)); // 58-87 range
-    const avgBpm = Math.round(bpms.reduce((a, b) => a + b, 0) / bpms.length);
+    if (withBpm.length === 0 && withHrv.length === 0) return null;
 
-    const latestHrv = 35 + (seedFromDate(recentDates[0]) % 40); // 35-74 range
-    const prevBpms = scanDates.slice(7, 14).map(d => 58 + (seedFromDate(d) % 30));
-    const prevAvg = prevBpms.length > 0
-      ? Math.round(prevBpms.reduce((a, b) => a + b, 0) / prevBpms.length)
-      : avgBpm;
-    const bpmDiff = prevAvg !== 0 ? Math.round(((avgBpm - prevAvg) / prevAvg) * 100) : 0;
+    // Weekly BPM avg (last 7 scans with bpm)
+    const recentBpm = withBpm.slice(0, 7);
+    const avgBpm = recentBpm.length > 0
+      ? Math.round(recentBpm.reduce((a, s) => a + s.bpm!, 0) / recentBpm.length)
+      : null;
 
-    const hrvStatus = latestHrv >= 50 ? 'Good' : 'Needs rest';
-    const hrvStatusClass = latestHrv >= 50
-      ? 'bg-success/10 text-success'
-      : 'bg-destructive/10 text-destructive';
+    // Previous week for comparison
+    const prevBpm = withBpm.slice(7, 14);
+    const prevAvg = prevBpm.length > 0
+      ? Math.round(prevBpm.reduce((a, s) => a + s.bpm!, 0) / prevBpm.length)
+      : null;
+
+    const bpmDiff = avgBpm != null && prevAvg != null && prevAvg !== 0
+      ? Math.round(((avgBpm - prevAvg) / prevAvg) * 100)
+      : null;
+
+    // Latest HRV
+    const latestHrv = withHrv.length > 0 ? Math.round(withHrv[0].hrv_ms!) : null;
+    const hrvStatus = latestHrv != null
+      ? latestHrv >= 50 ? 'Good' : 'Needs rest'
+      : null;
+    const hrvStatusClass = latestHrv != null
+      ? latestHrv >= 50 ? 'bg-success/10 text-success' : 'bg-destructive/10 text-destructive'
+      : '';
 
     return { avgBpm, bpmDiff, latestHrv, hrvStatus, hrvStatusClass };
-  }, [scanDates]);
+  }, [scans]);
+
+  const hasData = stats && (stats.avgBpm != null || stats.latestHrv != null);
 
   return (
     <div className="grid grid-cols-2 gap-3 px-5 mb-8">
@@ -46,15 +56,17 @@ const HealthStats = ({ scanDates }: HealthStatsProps) => {
           <Activity className="h-3.5 w-3.5 text-muted-foreground" />
           <span className="text-[10px] font-bold tracking-widest uppercase text-muted-foreground">Weekly BPM</span>
         </div>
-        {stats ? (
+        {hasData && stats.avgBpm != null ? (
           <>
             <div className="flex items-baseline gap-1">
               <span className="text-3xl font-bold text-foreground">{stats.avgBpm}</span>
               <span className="text-sm text-muted-foreground">avg</span>
             </div>
-            <p className={`text-xs mt-1 ${stats.bpmDiff <= 0 ? 'text-success' : 'text-destructive'}`}>
-              {stats.bpmDiff <= 0 ? '↓' : '↑'} {Math.abs(stats.bpmDiff)}% vs last week
-            </p>
+            {stats.bpmDiff != null && (
+              <p className={`text-xs mt-1 ${stats.bpmDiff <= 0 ? 'text-success' : 'text-destructive'}`}>
+                {stats.bpmDiff <= 0 ? '↓' : '↑'} {Math.abs(stats.bpmDiff)}% vs last week
+              </p>
+            )}
           </>
         ) : (
           <>
@@ -73,7 +85,7 @@ const HealthStats = ({ scanDates }: HealthStatsProps) => {
           <HeartPulse className="h-3.5 w-3.5 text-muted-foreground" />
           <span className="text-[10px] font-bold tracking-widest uppercase text-muted-foreground">Latest HRV</span>
         </div>
-        {stats ? (
+        {hasData && stats.latestHrv != null ? (
           <>
             <div className="flex items-baseline gap-1">
               <span className="text-3xl font-bold text-foreground">{stats.latestHrv}</span>
