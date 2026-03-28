@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { supabase } from "@/integrations/supabase/client";
 import type { Session } from "@supabase/supabase-js";
+import { getSettings } from "@/lib/storage";
 import Auth from "./pages/Auth";
 import Index from "./pages/Index";
 import Scan from "./pages/Scan";
@@ -20,6 +21,7 @@ const queryClient = new QueryClient();
 const App = () => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [navVisible, setNavVisible] = useState(() => getSettings().onboarded);
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
@@ -36,6 +38,17 @@ const App = () => {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  // Poll for onboarded state changes (set by Onboarding page)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const onboarded = getSettings().onboarded;
+      if (onboarded && !navVisible) {
+        setNavVisible(true);
+      }
+    }, 300);
+    return () => clearInterval(interval);
+  }, [navVisible]);
 
   if (loading) {
     return (
@@ -62,7 +75,7 @@ const App = () => {
                 <Route path="/auth" element={<Auth />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
-              <BottomNav />
+              <BottomNav visible={navVisible} />
           </div>
         </BrowserRouter>
       </TooltipProvider>
