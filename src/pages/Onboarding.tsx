@@ -30,6 +30,7 @@ const Onboarding = ({ onComplete }: { onComplete: () => void }) => {
     settings.onboarded = true;
     saveSettings(settings);
     onComplete();
+    navigate('/scan');
   };
 
   const totalSteps = 3;
