@@ -58,6 +58,7 @@ const App = () => {
                 <Route path="/scan" element={<Scan />} />
                 <Route path="/scan/:id" element={<ScanDetail />} />
                 <Route path="/settings" element={<Settings />} />
+                <Route path="/history" element={<History />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
