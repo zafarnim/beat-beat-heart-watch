@@ -97,8 +97,7 @@ const LiveWaveform = ({ stream, isRecording, elapsed, duration }: LiveWaveformPr
         const x = startX + i * totalBarWidth;
         const barHeight = Math.max(3, bars[i] * (h * 0.85));
         const y = (h - barHeight) / 2;
-
-        ctx.fillStyle = `hsl(${destructive})`;
+        ctx.fillStyle = `hsl(${foreground})`;
         ctx.beginPath();
         ctx.roundRect(x, y, BAR_WIDTH, barHeight, 1);
         ctx.fill();
