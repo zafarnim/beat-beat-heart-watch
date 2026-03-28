@@ -12,6 +12,7 @@ import InconclusiveResult from '@/components/results/InconclusiveResult';
 import EmergencyResult from '@/components/results/EmergencyResult';
 import TryAgainResult from '@/components/results/TryAgainResult';
 import WaveformPlayer from '@/components/WaveformPlayer';
+import LiveWaveform from '@/components/LiveWaveform';
 
 type Phase = 'position' | 'ready' | 'recording' | 'analyzing' | 'result';
 
@@ -67,6 +68,7 @@ const Scan = () => {
   const [countdown, setCountdown] = useState(SCAN_DURATION);
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
@@ -90,6 +92,7 @@ const Scan = () => {
   const startRecording = useCallback(async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      setMediaStream(stream);
       const mediaRecorder = new MediaRecorder(stream, {
         mimeType: MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : 'audio/webm',
       });
@@ -97,7 +100,7 @@ const Scan = () => {
       mediaRecorderRef.current = mediaRecorder;
 
       mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) chunksRef.current.push(e.data); };
-      mediaRecorder.onstop = () => { stream.getTracks().forEach(t => t.stop()); };
+      mediaRecorder.onstop = () => { stream.getTracks().forEach(t => t.stop()); setMediaStream(null); };
 
       mediaRecorder.start(250);
       startTimeRef.current = Date.now();
@@ -322,18 +325,12 @@ const Scan = () => {
               Keep your finger steady on the sensor and breathe naturally.
             </p>
 
-            <div className="flex items-end gap-0.5 h-12 mt-2">
-              {Array.from({ length: 30 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="w-1.5 rounded-full bg-muted-foreground/30 animate-pulse"
-                  style={{
-                    height: `${Math.max(8, Math.random() * 40 + 8)}px`,
-                    animationDelay: `${i * 50}ms`,
-                  }}
-                />
-              ))}
-            </div>
+            <LiveWaveform
+              stream={mediaStream}
+              isRecording={phase === 'recording'}
+              elapsed={SCAN_DURATION - countdown}
+              duration={SCAN_DURATION}
+            />
           </div>
         )}
 
