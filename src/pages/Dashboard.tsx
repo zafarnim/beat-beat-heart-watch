@@ -247,7 +247,7 @@ const Dashboard = () => {
                 <div
                   key={scan.id}
                   onClick={() => navigate(`/scan/${scan.id}`)}
-                  className="flex items-center gap-3 rounded-2xl bg-muted/30 p-4 transition-colors hover:bg-muted/50 cursor-pointer"
+                  className="flex items-start gap-3 rounded-2xl bg-muted/30 p-4 transition-colors hover:bg-muted/50 cursor-pointer"
                 >
                   <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full ${config.iconClass}`}>
                     <Icon className="h-5 w-5" />
