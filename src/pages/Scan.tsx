@@ -250,10 +250,7 @@ const Scan = () => {
             {analysisResult.result === 'try_again' && <TryAgainResult onRetry={resetScan} />}
 
             {audioUrl && analysisResult.result !== 'try_again' && (
-              <div className="rounded-2xl bg-muted/30 p-4">
-                <p className="mb-2 text-xs font-medium text-muted-foreground">Your Recording</p>
-                <audio controls src={audioUrl} className="w-full" />
-              </div>
+              <WaveformPlayer audioUrl={audioUrl} />
             )}
           </div>
         )}
