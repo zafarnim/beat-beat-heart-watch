@@ -255,6 +255,28 @@ const Scan = () => {
             >
               I'm Ready
             </Button>
+
+            <div className="flex items-center gap-3 w-full max-w-xs mt-2">
+              <div className="h-px flex-1 bg-border" />
+              <span className="text-xs text-muted-foreground uppercase tracking-widest">or</span>
+              <div className="h-px flex-1 bg-border" />
+            </div>
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="audio/*"
+              className="hidden"
+              onChange={handleFileUpload}
+            />
+            <Button
+              variant="outline"
+              className="w-full max-w-xs rounded-full py-6"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <Upload className="mr-2 h-4 w-4" />
+              Upload Audio File
+            </Button>
           </div>
         )}
 
