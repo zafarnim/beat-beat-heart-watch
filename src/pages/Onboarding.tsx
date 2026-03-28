@@ -41,12 +41,13 @@ const Onboarding = ({ onComplete }: { onComplete: () => void }) => {
         <img
           src={onboardingHero}
           alt="Serene sunset meditation"
-          className="absolute inset-0 h-full w-full object-cover"
+          className="absolute inset-0 h-full w-full object-cover blur-[2px] scale-105"
           width={960}
           height={1920}
         />
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+        {/* Gradient overlay with glass feel */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-accent/20 backdrop-blur-[1px]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-accent/15 via-transparent to-transparent" />
 
 
         {/* Bottom content */}
