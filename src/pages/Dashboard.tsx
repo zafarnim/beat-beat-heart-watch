@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Heart, ChevronRight, CheckCircle2, Play, Bell, AlertTriangle, HelpCircle, Hospital } from 'lucide-react';
+import logo from '@/assets/logo.svg';
 import kryLogo from '@/assets/kry-logo.png';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
