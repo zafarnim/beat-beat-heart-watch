@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Heart, ChevronRight, CheckCircle2, Play, AlertTriangle, HelpCircle, Hospital, Settings, Circle, CheckCircle } from 'lucide-react';
+import WeekStreak from '@/components/WeekStreak';
 import kryLogo from '@/assets/kry-logo.png';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
@@ -147,6 +148,9 @@ const Dashboard = () => {
           <Settings className="h-5 w-5 text-muted-foreground" />
         </button>
       </div>
+
+      {/* Week Streak */}
+      <WeekStreak scanDates={scans.map(s => s.created_at)} />
 
       {/* Hero CTA Card */}
       <div className="px-5 mb-8">
