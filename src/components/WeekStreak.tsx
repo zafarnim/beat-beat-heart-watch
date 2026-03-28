@@ -63,9 +63,7 @@ const WeekStreak = ({ scanDates }: WeekStreakProps) => {
                   ? 'bg-primary-foreground/50'
                   : day.isToday
                     ? 'bg-primary-foreground/15 ring-2 ring-primary-foreground/30'
-                    : day.isFuture
-                      ? 'bg-primary-foreground/8'
-                      : 'bg-primary-foreground/15'
+                    : 'border-2 border-primary-foreground/20 bg-transparent'
               }`}
             >
               {day.completed ? (
