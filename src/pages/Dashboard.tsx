@@ -253,14 +253,13 @@ const Dashboard = () => {
                     <Icon className="h-5 w-5" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium text-sm text-foreground">{scan.result_title}</span>
-                      <span className={`inline-flex items-center gap-1.5 text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-full ${config.labelClass}`}>
+                    <span className="font-medium text-sm text-foreground">{scan.result_title}</span>
+                    <div className="flex items-center gap-2 mt-0.5">
+                      <span className={`text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-full ${config.labelClass}`}>
                         {config.label}
-                        <img src={kryLogo} alt="Kry" className="h-3 w-auto" />
                       </span>
+                      <p className="text-xs text-muted-foreground">{formatDate(scan.created_at)}</p>
                     </div>
-                    <p className="text-xs text-muted-foreground mt-0.5">{formatDate(scan.created_at)}</p>
                   </div>
                   <div className="flex items-center gap-1 shrink-0">
                     {scan.result !== 'try_again' && (
