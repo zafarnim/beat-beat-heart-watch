@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Heart, Smartphone, Loader2, X } from 'lucide-react';
+import { Heart, Smartphone, Loader2, X, Bell } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -153,7 +153,6 @@ const Scan = () => {
       )}
 
       <div className="flex flex-1 flex-col items-center justify-center px-5 pb-10">
-        {/* Position prompt */}
         {phase === 'position' && (
           <div className="flex flex-col items-center gap-6 text-center animate-in fade-in duration-300">
             <div className="flex h-24 w-24 items-center justify-center rounded-2xl bg-muted/50">
@@ -173,13 +172,11 @@ const Scan = () => {
           </div>
         )}
 
-        {/* Recording */}
         {phase === 'recording' && (
           <div className="flex flex-col items-center gap-6 text-center animate-in fade-in duration-300">
             <p className="text-xs tracking-widest uppercase text-muted-foreground">Scanning Vital Signs</p>
             <p className="font-display text-6xl font-bold tabular-nums text-foreground">{formatTime(countdown)}</p>
 
-            {/* Pulsing orb */}
             <div className="relative my-4">
               <div className="absolute inset-[-20px] rounded-full bg-muted/30 animate-ping" style={{ animationDuration: '2s' }} />
               <div className="absolute inset-[-10px] rounded-full bg-muted/40 animate-pulse" />
@@ -188,7 +185,6 @@ const Scan = () => {
               </div>
             </div>
 
-            {/* Status badge */}
             <span className="inline-flex items-center gap-2 rounded-full bg-accent/40 px-4 py-2 text-xs font-medium text-foreground">
               <span className="h-2 w-2 rounded-full bg-success animate-pulse" />
               Recording in progress...
@@ -198,14 +194,13 @@ const Scan = () => {
               Keep your finger steady on the sensor and breathe naturally.
             </p>
 
-            {/* Audio waveform placeholder */}
             <div className="flex items-end gap-0.5 h-12 mt-2">
               {Array.from({ length: 30 }).map((_, i) => (
                 <div
                   key={i}
                   className="w-1.5 rounded-full bg-muted-foreground/30 animate-pulse"
                   style={{
-                    height: `${Math.max(8, Math.sin(i * 0.5 + Date.now() / 500) * 30 + 20)}px`,
+                    height: `${Math.max(8, Math.random() * 40 + 8)}px`,
                     animationDelay: `${i * 50}ms`,
                   }}
                 />
@@ -214,7 +209,6 @@ const Scan = () => {
           </div>
         )}
 
-        {/* Analyzing */}
         {phase === 'analyzing' && (
           <div className="flex flex-col items-center gap-6 text-center animate-in fade-in duration-300">
             <div className="flex h-24 w-24 items-center justify-center rounded-full bg-muted/40">
@@ -225,10 +219,8 @@ const Scan = () => {
           </div>
         )}
 
-        {/* Results */}
         {phase === 'result' && analysisResult && (
           <div className="w-full max-w-sm space-y-6 pb-6">
-            {/* Header for result */}
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <div className="h-9 w-9 rounded-full bg-accent/60 flex items-center justify-center">
@@ -236,9 +228,7 @@ const Scan = () => {
                 </div>
                 <span className="font-display text-lg font-bold text-foreground">Beat Beat</span>
               </div>
-              <button className="text-foreground">
-                <Bell className="h-5 w-5" />
-              </button>
+              <Bell className="h-5 w-5 text-foreground" />
             </div>
 
             {analysisResult.result === 'normal' && (
@@ -269,8 +259,5 @@ const Scan = () => {
     </div>
   );
 };
-
-// Need Bell import at top for result header
-import { Bell } from 'lucide-react';
 
 export default Scan;
