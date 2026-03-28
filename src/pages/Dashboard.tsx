@@ -247,9 +247,9 @@ const Dashboard = () => {
                 <div
                   key={scan.id}
                   onClick={() => navigate(`/scan/${scan.id}`)}
-                  className="flex items-center gap-3 rounded-2xl bg-muted/30 p-4 transition-colors hover:bg-muted/50 cursor-pointer"
+                  className="flex items-start gap-3 rounded-2xl bg-muted/30 p-4 transition-colors hover:bg-muted/50 cursor-pointer"
                 >
-                  <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full ${config.iconClass}`}>
+                  <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full mt-0.5 ${config.iconClass}`}>
                     <Icon className="h-5 w-5" />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -261,7 +261,7 @@ const Dashboard = () => {
                     </div>
                     <p className="text-xs text-muted-foreground mt-0.5">{formatDate(scan.created_at)}</p>
                   </div>
-                  <div className="flex items-center gap-1 shrink-0">
+                  <div className="flex items-center gap-1 shrink-0 mt-1">
                     {scan.result !== 'try_again' && (
                       <button
                         onClick={(e) => sendToKry(scan.id, e)}
