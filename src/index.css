@@ -6,50 +6,55 @@
 
 @layer base {
   :root {
-    --background: 220 20% 97%;
-    --foreground: 216 10% 10%;
+    /* Soft Cloud #F4F1F6 → hsl(270, 20%, 96%) */
+    /* Pearl #E09AEC → hsl(264, 11%, 91%) — actually #E9E4EC */
+    /* Lavender Haze #D8CDEA → hsl(261, 30%, 86%) */
+    /* Ink Plum #2D2538 → hsl(262, 20%, 18%) */
 
-    --card: 220 14% 95%;
-    --card-foreground: 216 10% 10%;
+    --background: 270 20% 96%;
+    --foreground: 262 20% 18%;
 
-    --popover: 220 14% 95%;
-    --popover-foreground: 216 10% 10%;
+    --card: 264 11% 91%;
+    --card-foreground: 262 20% 18%;
 
-    --primary: 216 10% 10%;
-    --primary-foreground: 220 20% 97%;
+    --popover: 270 20% 96%;
+    --popover-foreground: 262 20% 18%;
 
-    --secondary: 216 10% 91%;
-    --secondary-foreground: 216 10% 10%;
+    --primary: 262 20% 18%;
+    --primary-foreground: 270 20% 96%;
 
-    --muted: 216 10% 91%;
-    --muted-foreground: 212 6% 45%;
+    --secondary: 264 11% 91%;
+    --secondary-foreground: 262 20% 18%;
 
-    --accent: 212 6% 70%;
-    --accent-foreground: 216 10% 10%;
+    --muted: 264 11% 91%;
+    --muted-foreground: 262 12% 45%;
+
+    --accent: 261 30% 86%;
+    --accent-foreground: 262 20% 18%;
 
     --destructive: 0 84% 60%;
-    --destructive-foreground: 220 20% 97%;
+    --destructive-foreground: 270 20% 96%;
 
     --success: 145 63% 42%;
-    --success-foreground: 220 20% 97%;
+    --success-foreground: 270 20% 96%;
 
     --warning: 38 92% 50%;
-    --warning-foreground: 216 10% 10%;
+    --warning-foreground: 262 20% 18%;
 
-    --border: 216 10% 91%;
-    --input: 216 10% 91%;
-    --ring: 216 10% 10%;
+    --border: 264 11% 91%;
+    --input: 264 11% 91%;
+    --ring: 261 30% 86%;
 
     --radius: 1rem;
 
-    --sidebar-background: 220 20% 97%;
-    --sidebar-foreground: 216 10% 10%;
-    --sidebar-primary: 216 10% 10%;
-    --sidebar-primary-foreground: 220 20% 97%;
-    --sidebar-accent: 216 10% 91%;
-    --sidebar-accent-foreground: 216 10% 10%;
-    --sidebar-border: 216 10% 91%;
-    --sidebar-ring: 216 10% 10%;
+    --sidebar-background: 270 20% 96%;
+    --sidebar-foreground: 262 20% 18%;
+    --sidebar-primary: 262 20% 18%;
+    --sidebar-primary-foreground: 270 20% 96%;
+    --sidebar-accent: 261 30% 86%;
+    --sidebar-accent-foreground: 262 20% 18%;
+    --sidebar-border: 264 11% 91%;
+    --sidebar-ring: 261 30% 86%;
   }
 
   .dark {
