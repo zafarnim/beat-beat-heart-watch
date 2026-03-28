@@ -18,21 +18,9 @@ const HealthStats = ({ scans }: HealthStatsProps) => {
 
     if (withBpm.length === 0 && withHrv.length === 0) return null;
 
-    // Weekly BPM avg (last 7 scans with bpm)
-    const recentBpm = withBpm.slice(0, 7);
-    const avgBpm = recentBpm.length > 0
-      ? Math.round(recentBpm.reduce((a, s) => a + s.bpm!, 0) / recentBpm.length)
-      : null;
+    // Latest BPM
+    const latestBpm = withBpm.length > 0 ? Math.round(withBpm[0].bpm!) : null;
 
-    // Previous week for comparison
-    const prevBpm = withBpm.slice(7, 14);
-    const prevAvg = prevBpm.length > 0
-      ? Math.round(prevBpm.reduce((a, s) => a + s.bpm!, 0) / prevBpm.length)
-      : null;
-
-    const bpmDiff = avgBpm != null && prevAvg != null && prevAvg !== 0
-      ? Math.round(((avgBpm - prevAvg) / prevAvg) * 100)
-      : null;
 
     // Latest HRV
     const latestHrv = withHrv.length > 0 ? Math.round(withHrv[0].hrv_ms!) : null;
