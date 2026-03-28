@@ -55,8 +55,28 @@ const WaveformPlayer = ({ audioUrl }: WaveformPlayerProps) => {
     const audio = new Audio(audioUrl);
     audioRef.current = audio;
 
-    audio.addEventListener('loadedmetadata', () => setDuration(audio.duration));
+    const updateDuration = () => {
+      if (audio.duration && isFinite(audio.duration) && !isNaN(audio.duration)) {
+        setDuration(audio.duration);
+      }
+    };
+
+    audio.addEventListener('loadedmetadata', updateDuration);
+    audio.addEventListener('durationchange', updateDuration);
+    audio.addEventListener('canplaythrough', updateDuration);
     audio.addEventListener('ended', () => setIsPlaying(false));
+
+    // For blob URLs, sometimes we need to seek to get the real duration
+    audio.addEventListener('loadedmetadata', () => {
+      if (!isFinite(audio.duration)) {
+        audio.currentTime = 1e101;
+        audio.addEventListener('timeupdate', function seekBack() {
+          audio.removeEventListener('timeupdate', seekBack);
+          audio.currentTime = 0;
+          updateDuration();
+        });
+      }
+    });
 
     return () => {
       audio.pause();
