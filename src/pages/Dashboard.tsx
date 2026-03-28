@@ -11,6 +11,8 @@ import { ScanRecord, ScanResultType } from '@/lib/types';
 
 interface ScanWithAudio extends ScanRecord {
   file_url?: string | null;
+  bpm?: number | null;
+  hrv_ms?: number | null;
 }
 
 interface RecommendedStep {
