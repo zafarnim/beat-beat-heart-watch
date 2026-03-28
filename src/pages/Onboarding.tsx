@@ -58,7 +58,7 @@ const Onboarding = ({ onComplete }: { onComplete: () => void }) => {
         </div>
 
         {/* Bottom content */}
-        <div className="relative z-10 mt-auto px-6 pb-10">
+        <div className="relative z-10 mt-auto px-6 pb-28">
           <p className="text-sm font-medium tracking-widest uppercase text-white/70 mb-3">Beat Beat</p>
           <h1 className="font-display text-[2.2rem] font-bold leading-[1.15] text-white">
             Listen to<br />your <em className="font-serif italic text-white/80">heart.</em>
