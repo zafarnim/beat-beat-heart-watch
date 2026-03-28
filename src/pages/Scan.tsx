@@ -292,6 +292,8 @@ const Scan = () => {
               </div>
             </button>
 
+            <p className="text-xs text-muted-foreground/60">Press the heart to record</p>
+
             <p className="text-sm text-muted-foreground max-w-xs">
               Tap the heart to start recording your heartbeat.
             </p>
