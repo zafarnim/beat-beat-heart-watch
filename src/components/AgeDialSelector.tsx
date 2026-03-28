@@ -73,7 +73,7 @@ const AgeDialSelector = ({ value, onChange, min = 1, max = 100 }: AgeDialSelecto
     <div className="flex flex-col items-center">
       {/* Age display */}
       <div className="text-center mb-2">
-        <span className="text-6xl font-bold tabular-nums text-foreground">{String(value).padStart(3, '0')}</span>
+        <span className="text-6xl font-bold tabular-nums text-foreground">{value}</span>
         <p className="text-xs tracking-widest uppercase text-muted-foreground mt-1">Years Old</p>
       </div>
 
