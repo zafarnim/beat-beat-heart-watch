@@ -76,7 +76,7 @@ const Onboarding = ({ onComplete }: { onComplete: () => void }) => {
   }
 
   return (
-    <div className="flex min-h-screen flex-col px-6 pb-8 pt-6 relative overflow-hidden bg-background">
+    <div className="flex min-h-screen flex-col px-6 pb-28 pt-6 relative overflow-hidden bg-background">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <h1 className="font-display text-xl font-bold text-foreground">Beat Beat</h1>
