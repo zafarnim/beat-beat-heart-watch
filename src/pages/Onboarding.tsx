@@ -61,8 +61,11 @@ const Onboarding = ({ onComplete }: { onComplete: () => void }) => {
         <div className="relative z-10 mt-auto px-6 pb-10">
           <p className="text-sm font-medium tracking-widest uppercase text-white/70 mb-3">Beat Beat</p>
           <h1 className="font-display text-[2.2rem] font-bold leading-[1.15] text-white">
-            Discover a new<br />world of wellness<br />and serenity
+            Listen to<br />your <em className="font-serif italic text-white/80">heart.</em>
           </h1>
+          <p className="mt-4 text-sm text-white/70 leading-relaxed">
+            Pulse Check utilizes advanced ML algorithms to detect subtle cardiac patterns, providing clinical-grade health insights from the palm of your hand.
+          </p>
 
           {/* CTA row */}
           <div className="mt-8 flex items-center gap-3">
