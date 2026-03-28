@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Heart, ChevronDown, ChevronUp, Send, CheckCircle2, Play } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Heart, ChevronRight, Send, CheckCircle2, Play, Bell, AlertTriangle, HelpCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -12,18 +10,17 @@ interface ScanWithAudio extends ScanRecord {
   file_url?: string | null;
 }
 
-const resultStyles: Record<ScanResultType, { label: string; className: string }> = {
-  normal: { label: 'Normal', className: 'bg-success/15 text-success border-success/30' },
-  clear_classification: { label: 'Detected', className: 'bg-warning/15 text-warning border-warning/30' },
-  inconclusive: { label: 'Review Needed', className: 'bg-muted/60 text-muted-foreground border-border' },
-  emergency: { label: 'Urgent', className: 'bg-destructive/15 text-destructive border-destructive/30' },
-  try_again: { label: 'Retry', className: 'bg-muted/60 text-muted-foreground border-border' },
+const resultConfig: Record<ScanResultType, { label: string; labelClass: string; iconClass: string; icon: typeof Heart }> = {
+  normal: { label: 'HEALTHY', labelClass: 'bg-success/15 text-success', iconClass: 'bg-success/15 text-success', icon: Heart },
+  clear_classification: { label: 'DETECTED', labelClass: 'bg-warning/15 text-warning', iconClass: 'bg-warning/15 text-warning', icon: AlertTriangle },
+  inconclusive: { label: 'REVIEW', labelClass: 'bg-accent text-muted-foreground', iconClass: 'bg-accent text-muted-foreground', icon: HelpCircle },
+  emergency: { label: 'ACTION REQUIRED', labelClass: 'bg-destructive/15 text-destructive', iconClass: 'bg-destructive/15 text-destructive', icon: AlertTriangle },
+  try_again: { label: 'RETRY', labelClass: 'bg-muted text-muted-foreground', iconClass: 'bg-muted text-muted-foreground', icon: HelpCircle },
 };
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [scans, setScans] = useState<ScanWithAudio[]>([]);
-  const [expanded, setExpanded] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -54,102 +51,124 @@ const Dashboard = () => {
     setLoading(false);
   };
 
-  const sendToKry = async (id: string) => {
+  const sendToKry = async (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
     await supabase.from('scans').update({ sent_to_kry: true }).eq('id', id);
     setScans(prev => prev.map(s => s.id === id ? { ...s, sent_to_kry: true } : s));
-    toast.success('Scan sent to Kry (mock)');
+    toast.success('Scan sent to Kry for review');
+  };
+
+  const formatDate = (dateStr: string) => {
+    const d = new Date(dateStr);
+    const now = new Date();
+    const isToday = d.toDateString() === now.toDateString();
+    const isYesterday = new Date(now.getTime() - 86400000).toDateString() === d.toDateString();
+    const time = d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+    if (isToday) return `Today, ${time}`;
+    if (isYesterday) return `Yesterday, ${time}`;
+    return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) + `, ${time}`;
   };
 
   return (
-    <div className="flex flex-col gap-5 px-5 pb-28 pt-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="font-display text-2xl font-bold text-foreground">Beat Beat</h1>
-          <p className="text-sm text-muted-foreground">Your heart, at a glance</p>
+    <div className="flex flex-col pb-28 pt-4">
+      {/* Header */}
+      <div className="flex items-center justify-between px-5 mb-6">
+        <div className="flex items-center gap-3">
+          <div className="h-10 w-10 rounded-full bg-accent/60 flex items-center justify-center">
+            <Heart className="h-5 w-5 text-foreground" />
+          </div>
+          <h1 className="font-display text-xl font-bold text-foreground">Beat Beat</h1>
         </div>
-        <div className="flex h-10 w-10 items-center justify-center rounded-full glass">
-          <Heart className="h-5 w-5 text-foreground" />
+        <button className="h-10 w-10 rounded-full flex items-center justify-center">
+          <Bell className="h-5 w-5 text-foreground" />
+        </button>
+      </div>
+
+      {/* Hero CTA Card */}
+      <div className="px-5 mb-8">
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-foreground via-foreground/90 to-muted-foreground p-6 pb-7">
+          {/* Subtle texture overlay */}
+          <div className="absolute inset-0 opacity-10" style={{
+            backgroundImage: 'radial-gradient(circle at 30% 50%, hsl(var(--accent)) 0%, transparent 60%)',
+          }} />
+          <div className="relative z-10">
+            <p className="text-xs tracking-widest uppercase text-primary-foreground/60 mb-3">Heart Health Monitoring</p>
+            <h2 className="font-display text-2xl font-bold text-primary-foreground leading-tight">
+              Ready for your<br />daily check?
+            </h2>
+            <p className="mt-2 text-sm text-primary-foreground/70">
+              Place your finger on the camera lens for a 15-second heart rate and rhythm analysis.
+            </p>
+            <Button
+              size="lg"
+              variant="secondary"
+              className="mt-5 rounded-full px-6 font-semibold"
+              onClick={() => navigate('/scan')}
+            >
+              <Heart className="mr-2 h-4 w-4" />
+              Start Scan
+            </Button>
+          </div>
         </div>
       </div>
 
-      <Button
-        size="lg"
-        className="w-full rounded-2xl py-8 text-lg font-bold shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-shadow"
-        onClick={() => navigate('/scan')}
-      >
-        <Heart className="mr-2 h-6 w-6" />
-        Start Scan
-      </Button>
+      {/* Recent Activity */}
+      <div className="px-5">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="font-display text-lg font-bold text-foreground">Recent Activity</h2>
+          {scans.length > 3 && (
+            <span className="text-xs font-medium tracking-widest uppercase text-muted-foreground">View All</span>
+          )}
+        </div>
 
-      <div>
-        <h2 className="font-display text-lg font-semibold text-foreground">Scan History</h2>
         {loading ? (
-          <p className="mt-4 text-sm text-muted-foreground">Loading…</p>
+          <div className="space-y-3">
+            {[1, 2, 3].map(i => (
+              <div key={i} className="h-20 rounded-2xl bg-muted/40 animate-pulse" />
+            ))}
+          </div>
         ) : scans.length === 0 ? (
-          <Card className="mt-3">
-            <CardContent className="py-8 text-center">
-              <Heart className="mx-auto h-10 w-10 text-muted-foreground/30" />
-              <p className="mt-3 text-sm text-muted-foreground">No scans yet. Start your first one!</p>
-            </CardContent>
-          </Card>
+          <div className="rounded-2xl bg-muted/30 py-12 text-center">
+            <Heart className="mx-auto h-10 w-10 text-muted-foreground/30" />
+            <p className="mt-3 text-sm text-muted-foreground">No scans yet. Start your first one!</p>
+          </div>
         ) : (
-          <div className="mt-3 space-y-2">
+          <div className="space-y-2">
             {scans.map(scan => {
-              const style = resultStyles[scan.result];
-              const isExpanded = expanded === scan.id;
+              const config = resultConfig[scan.result];
+              const Icon = config.icon;
               return (
-                <Card key={scan.id} className="cursor-pointer" onClick={() => setExpanded(isExpanded ? null : scan.id)}>
-                  <CardContent className="p-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <Badge variant="outline" className={style.className}>{style.label}</Badge>
-                        <span className="text-sm font-medium text-foreground">{scan.result_title}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs text-muted-foreground">
-                          {new Date(scan.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
-                        </span>
-                        {isExpanded ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
-                      </div>
+                <div
+                  key={scan.id}
+                  className="flex items-center gap-3 rounded-2xl bg-muted/30 p-4 transition-colors hover:bg-muted/50"
+                >
+                  <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full ${config.iconClass}`}>
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium text-sm text-foreground">{scan.result_title}</span>
+                      <span className={`text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-full ${config.labelClass}`}>
+                        {config.label}
+                      </span>
                     </div>
-                    {isExpanded && (
-                      <div className="mt-3 space-y-3 animate-in slide-in-from-top-2 duration-200">
-                        <p className="text-sm text-muted-foreground">{scan.result_description}</p>
-                        {scan.condition_name && (
-                          <p className="text-sm"><strong className="text-foreground">Condition:</strong> {scan.condition_name}</p>
-                        )}
-                        {scan.recommended_steps && (
-                          <p className="text-sm"><strong className="text-foreground">Next steps:</strong> {scan.recommended_steps}</p>
-                        )}
-
-                        {scan.file_url && (
-                          <div className="rounded-xl glass p-3" onClick={e => e.stopPropagation()}>
-                            <p className="mb-1.5 flex items-center gap-1 text-xs font-medium text-muted-foreground">
-                              <Play className="h-3 w-3" /> Recording
-                            </p>
-                            <audio controls src={scan.file_url} className="w-full" />
-                          </div>
-                        )}
-
-                        {scan.result !== 'try_again' && (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="rounded-full"
-                            disabled={scan.sent_to_kry}
-                            onClick={e => { e.stopPropagation(); sendToKry(scan.id); }}
-                          >
-                            {scan.sent_to_kry ? (
-                              <><CheckCircle2 className="mr-1 h-3 w-3" /> Sent to Kry</>
-                            ) : (
-                              <><Send className="mr-1 h-3 w-3" /> Send to Kry</>
-                            )}
-                          </Button>
-                        )}
-                      </div>
+                    <p className="text-xs text-muted-foreground mt-0.5">{formatDate(scan.created_at)}</p>
+                  </div>
+                  <div className="flex items-center gap-1 shrink-0">
+                    {scan.result !== 'try_again' && (
+                      <button
+                        onClick={(e) => sendToKry(scan.id, e)}
+                        disabled={scan.sent_to_kry}
+                        className={`h-8 w-8 rounded-full flex items-center justify-center transition-colors ${
+                          scan.sent_to_kry ? 'text-success' : 'text-muted-foreground hover:text-foreground'
+                        }`}
+                      >
+                        {scan.sent_to_kry ? <CheckCircle2 className="h-4 w-4" /> : <Send className="h-4 w-4" />}
+                      </button>
                     )}
-                  </CardContent>
-                </Card>
+                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                  </div>
+                </div>
               );
             })}
           </div>
