@@ -92,6 +92,7 @@ const Scan = () => {
   const startRecording = useCallback(async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      setMediaStream(stream);
       const mediaRecorder = new MediaRecorder(stream, {
         mimeType: MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : 'audio/webm',
       });
@@ -99,7 +100,7 @@ const Scan = () => {
       mediaRecorderRef.current = mediaRecorder;
 
       mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) chunksRef.current.push(e.data); };
-      mediaRecorder.onstop = () => { stream.getTracks().forEach(t => t.stop()); };
+      mediaRecorder.onstop = () => { stream.getTracks().forEach(t => t.stop()); setMediaStream(null); };
 
       mediaRecorder.start(250);
       startTimeRef.current = Date.now();
