@@ -1,10 +1,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Heart, ChevronRight, HelpCircle, X, ArrowRight } from 'lucide-react';
+import { Heart, ChevronRight, HelpCircle, X, ArrowRight, Mail, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import AgeDialSelector from '@/components/AgeDialSelector';
 import { saveSettings } from '@/lib/storage';
 import { DEFAULT_SETTINGS, UserSettings } from '@/lib/types';
+import { supabase } from '@/integrations/supabase/client';
+import { lovable } from '@/integrations/lovable/index';
+import { toast } from 'sonner';
 import onboardingHero from '@/assets/onboarding-hero.jpg';
 
 const CONDITIONS_SUGGESTIONS = ['Hypertension', 'Arrhythmia', 'Heart failure', 'Diabetes', 'Asthma'];
