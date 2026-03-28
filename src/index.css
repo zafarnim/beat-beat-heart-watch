@@ -116,6 +116,10 @@
 }
 
 @layer utilities {
+  .badge-gradient {
+    background: linear-gradient(135deg, hsl(261 30% 86% / 0.5), hsl(270 20% 96%));
+  }
+
   .safe-bottom {
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }

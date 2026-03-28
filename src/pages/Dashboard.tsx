@@ -37,11 +37,11 @@ const toggleCompletedStep = (key: string): string[] => {
 };
 
 const resultConfig: Record<ScanResultType, { label: string; labelClass: string; iconClass: string; icon: typeof Heart }> = {
-  normal: { label: 'HEALTHY', labelClass: 'bg-success/15 text-success', iconClass: 'bg-success/15 text-success', icon: Heart },
-  clear_classification: { label: 'DETECTED', labelClass: 'bg-warning/15 text-warning', iconClass: 'bg-warning/15 text-warning', icon: AlertTriangle },
-  inconclusive: { label: 'REVIEW', labelClass: 'bg-accent text-muted-foreground', iconClass: 'bg-accent text-muted-foreground', icon: HelpCircle },
-  emergency: { label: 'ACTION REQUIRED', labelClass: 'bg-destructive/15 text-destructive', iconClass: 'bg-destructive/15 text-destructive', icon: AlertTriangle },
-  try_again: { label: 'RETRY', labelClass: 'bg-muted text-muted-foreground', iconClass: 'bg-muted text-muted-foreground', icon: HelpCircle },
+  normal: { label: 'HEALTHY', labelClass: 'badge-gradient text-success', iconClass: 'bg-success/15 text-success', icon: Heart },
+  clear_classification: { label: 'DETECTED', labelClass: 'badge-gradient text-warning', iconClass: 'bg-warning/15 text-warning', icon: AlertTriangle },
+  inconclusive: { label: 'REVIEW', labelClass: 'badge-gradient text-muted-foreground', iconClass: 'bg-accent text-muted-foreground', icon: HelpCircle },
+  emergency: { label: 'ACTION REQUIRED', labelClass: 'badge-gradient text-destructive', iconClass: 'bg-destructive/15 text-destructive', icon: AlertTriangle },
+  try_again: { label: 'RETRY', labelClass: 'badge-gradient text-muted-foreground', iconClass: 'bg-muted text-muted-foreground', icon: HelpCircle },
 };
 
 const Dashboard = () => {
