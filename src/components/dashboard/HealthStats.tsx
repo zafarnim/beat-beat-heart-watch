@@ -41,7 +41,7 @@ const HealthStats = ({ scans }: HealthStatsProps) => {
       {/* Latest BPM */}
       <div className="rounded-2xl bg-card p-4">
         <div className="flex items-center gap-1.5 mb-2">
-          <Heart className="h-3.5 w-3.5 text-destructive fill-destructive" />
+          <Heart className="h-3.5 w-3.5 text-muted-foreground" />
           <span className="text-[10px] font-bold tracking-widest uppercase text-muted-foreground">Heart Rate</span>
         </div>
         {hasData && stats.latestBpm != null ? (
