@@ -89,6 +89,8 @@ const Scan = () => {
   const handleAnalysis = async () => {
     setPhase('analyzing');
 
+    const { data: { user } } = await supabase.auth.getUser();
+
     const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
     const localUrl = URL.createObjectURL(blob);
     setAudioUrl(localUrl);
@@ -104,6 +106,7 @@ const Scan = () => {
         file_path: fileName,
         file_url: urlData.publicUrl,
         duration_seconds: durationSecs,
+        user_id: user?.id,
       }).select('id').single();
       if (recData) recordingId = recData.id;
     }
@@ -120,6 +123,7 @@ const Scan = () => {
         result_description: result.description,
         condition_name: result.condition || null,
         recommended_steps: result.steps || null,
+        user_id: user?.id,
       });
     }
 
