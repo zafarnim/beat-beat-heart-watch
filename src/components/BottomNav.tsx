@@ -1,5 +1,11 @@
-import { Home } from 'lucide-react';
+import { Home, Clock, Settings } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
+
+const navItems = [
+  { icon: Home, label: 'Home', path: '/' },
+  { icon: Clock, label: 'History', path: '/history' },
+  { icon: Settings, label: 'Settings', path: '/settings' },
+];
 
 const BottomNav = () => {
   const location = useLocation();
@@ -7,20 +13,24 @@ const BottomNav = () => {
 
   if (location.pathname === '/scan') return null;
 
-  const active = location.pathname === '/';
-
   return (
     <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 glass-strong rounded-full safe-bottom w-auto px-2">
-      <div className="flex items-center justify-around py-2 px-4">
-        <button
-          onClick={() => navigate('/')}
-          className={`flex flex-col items-center gap-0.5 px-4 py-1.5 transition-colors ${
-            active ? 'text-primary' : 'text-muted-foreground'
-          }`}
-        >
-          <Home className="h-5 w-5" />
-          <span className="text-[10px] font-medium">Home</span>
-        </button>
+      <div className="flex items-center justify-around py-2 px-4 gap-2">
+        {navItems.map(({ icon: Icon, label, path }) => {
+          const active = location.pathname === path;
+          return (
+            <button
+              key={path}
+              onClick={() => navigate(path)}
+              className={`flex flex-col items-center gap-0.5 px-4 py-1.5 transition-colors ${
+                active ? 'text-primary' : 'text-muted-foreground'
+              }`}
+            >
+              <Icon className="h-5 w-5" />
+              <span className="text-[10px] font-medium">{label}</span>
+            </button>
+          );
+        })}
       </div>
     </nav>
   );
