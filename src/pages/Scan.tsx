@@ -307,7 +307,7 @@ const Scan = () => {
               <div className="absolute inset-[-20px] rounded-full bg-muted/30 animate-ping" style={{ animationDuration: '2s' }} />
               <div className="absolute inset-[-10px] rounded-full bg-muted/40 animate-pulse" />
               <div className="relative flex h-36 w-36 items-center justify-center rounded-full bg-gradient-to-br from-muted-foreground to-foreground shadow-2xl">
-                <Heart className="h-14 w-14 text-primary-foreground" />
+                <Heart className="h-14 w-14 text-primary-foreground animate-heartbeat" />
               </div>
             </div>
 
