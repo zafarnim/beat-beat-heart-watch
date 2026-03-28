@@ -221,12 +221,12 @@ const Onboarding = ({ onComplete }: { onComplete: () => void }) => {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <h1 className="font-display text-xl font-bold text-foreground">Beat Beat</h1>
-        {step > 0 && (
+        {typeof step === 'number' && step > 0 && (
           <div className="flex items-center gap-2 text-xs text-muted-foreground tracking-widest uppercase">
             Phase {String(step).padStart(2, '0')}
             <div className="flex gap-1">
               {Array.from({ length: totalSteps }).map((_, i) => (
-                <div key={i} className={`h-1 rounded-full transition-all ${i < step ? 'w-6 bg-foreground' : 'w-4 bg-muted'}`} />
+                <div key={i} className={`h-1 rounded-full transition-all ${i < (step as number) ? 'w-6 bg-foreground' : 'w-4 bg-muted'}`} />
               ))}
             </div>
           </div>
