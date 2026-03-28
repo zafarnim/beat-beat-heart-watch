@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       recordings: {
         Row: {
           created_at: string
@@ -22,6 +46,7 @@ export type Database = {
           file_url: string
           id: string
           note: string | null
+          user_id: string | null
         }
         Insert: {
           created_at?: string
@@ -30,6 +55,7 @@ export type Database = {
           file_url: string
           id?: string
           note?: string | null
+          user_id?: string | null
         }
         Update: {
           created_at?: string
@@ -38,6 +64,7 @@ export type Database = {
           file_url?: string
           id?: string
           note?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -52,6 +79,7 @@ export type Database = {
           result_description: string
           result_title: string
           sent_to_kry: boolean
+          user_id: string | null
         }
         Insert: {
           condition_name?: string | null
@@ -63,6 +91,7 @@ export type Database = {
           result_description: string
           result_title: string
           sent_to_kry?: boolean
+          user_id?: string | null
         }
         Update: {
           condition_name?: string | null
@@ -74,6 +103,7 @@ export type Database = {
           result_description?: string
           result_title?: string
           sent_to_kry?: boolean
+          user_id?: string | null
         }
         Relationships: [
           {
