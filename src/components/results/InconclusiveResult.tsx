@@ -22,7 +22,7 @@ const InconclusiveResult = ({ onSendToKry, onDone }: Props) => (
       className="w-full rounded-full font-semibold py-6"
       onClick={onSendToKry}
     >
-      <Send className="mr-2 h-4 w-4" /> Send to Kry for Review
+      <img src={kryLogo} alt="Kry" className="mr-2 h-5 w-5 rounded" /> Send to Kry for Review
     </Button>
     <Button
       size="lg"
