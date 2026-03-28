@@ -176,7 +176,7 @@ const Dashboard = () => {
               {completedSteps.length}/{recommendedSteps.length} done
             </span>
           </div>
-          <div className="flex gap-3 overflow-x-auto px-5 pb-2 scrollbar-hide">
+          <div className="flex gap-2.5 overflow-x-auto px-5 pb-2 scrollbar-hide">
             {recommendedSteps.map((step) => {
               const key = `${step.scanId}_${step.stepIndex}`;
               const isDone = completedSteps.includes(key);
@@ -184,28 +184,23 @@ const Dashboard = () => {
                 <button
                   key={key}
                   onClick={() => handleToggleStep(step.scanId, step.stepIndex)}
-                  className={`flex-shrink-0 w-56 rounded-2xl p-4 text-left transition-all ${
+                  className={`flex-shrink-0 w-48 rounded-xl px-3.5 py-3 text-left transition-all ${
                     isDone
                       ? 'bg-success/10 border border-success/20'
                       : 'bg-muted/30 border border-transparent hover:bg-muted/50'
                   }`}
                 >
-                  <div className="flex items-start gap-3">
-                    <div className="mt-0.5 shrink-0">
+                  <div className="flex items-center gap-2.5">
+                    <div className="shrink-0">
                       {isDone ? (
-                        <CheckCircle className="h-5 w-5 text-success" />
+                        <CheckCircle className="h-4 w-4 text-success" />
                       ) : (
-                        <Circle className="h-5 w-5 text-muted-foreground" />
+                        <Circle className="h-4 w-4 text-muted-foreground/50" />
                       )}
                     </div>
-                    <div className="min-w-0">
-                      <p className={`text-sm font-medium leading-snug ${isDone ? 'line-through text-muted-foreground' : 'text-foreground'}`}>
-                        {step.text}
-                      </p>
-                      <p className="text-[11px] text-muted-foreground mt-2 truncate">
-                        {step.conditionName}
-                      </p>
-                    </div>
+                    <p className={`text-xs font-medium leading-snug line-clamp-2 ${isDone ? 'line-through text-muted-foreground' : 'text-foreground'}`}>
+                      {step.text}
+                    </p>
                   </div>
                 </button>
               );
