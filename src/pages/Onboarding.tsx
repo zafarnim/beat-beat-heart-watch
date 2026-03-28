@@ -41,7 +41,7 @@ const Onboarding = ({ onComplete }: { onComplete: () => void }) => {
         <img
           src={onboardingHero}
           alt="Serene sunset meditation"
-          className="absolute inset-0 h-full w-full object-cover blur-[2px] scale-105"
+          className="absolute inset-0 h-full w-full object-cover blur-[6px] scale-105"
           width={960}
           height={1920}
         />
