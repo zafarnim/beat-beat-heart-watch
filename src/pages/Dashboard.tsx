@@ -73,13 +73,17 @@ const Dashboard = () => {
   return (
     <div className="flex flex-col pb-28 pt-4">
       {/* Header */}
-      <div className="flex items-center justify-center px-5 mb-6">
+      <div className="flex items-center justify-between px-5 mb-6">
+        <div className="w-10" />
         <div className="flex items-center gap-3">
           <div className="h-10 w-10 rounded-full bg-accent/60 flex items-center justify-center">
             <Heart className="h-5 w-5 text-foreground" />
           </div>
           <h1 className="font-display text-xl font-bold text-foreground">Beat Beat</h1>
         </div>
+        <button onClick={() => navigate('/settings')} className="h-10 w-10 rounded-full flex items-center justify-center">
+          <Settings className="h-5 w-5 text-muted-foreground" />
+        </button>
       </div>
 
       {/* Hero CTA Card */}
