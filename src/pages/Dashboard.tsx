@@ -95,7 +95,7 @@ const Dashboard = () => {
               Ready for your<br />daily check?
             </h2>
             <p className="mt-2 text-sm text-primary-foreground/70">
-              Place your finger on the camera lens for a 15-second heart rate and rhythm analysis.
+              Put the phone near your heart to record your heart rate.
             </p>
             <Button
               size="lg"
