@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Heart, ChevronDown, ChevronUp, Send, CheckCircle2 } from 'lucide-react';
+import { Heart, ChevronDown, ChevronUp, Send, CheckCircle2, Play } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -7,6 +7,10 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { ScanRecord, ScanResultType } from '@/lib/types';
+
+interface ScanWithAudio extends ScanRecord {
+  file_url?: string | null;
+}
 
 const resultStyles: Record<ScanResultType, { label: string; className: string }> = {
   normal: { label: 'Normal', className: 'bg-success/15 text-success border-success/30' },
@@ -18,7 +22,7 @@ const resultStyles: Record<ScanResultType, { label: string; className: string }>
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const [scans, setScans] = useState<ScanRecord[]>([]);
+  const [scans, setScans] = useState<ScanWithAudio[]>([]);
   const [expanded, setExpanded] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -29,9 +33,24 @@ const Dashboard = () => {
   const fetchScans = async () => {
     const { data, error } = await supabase
       .from('scans')
-      .select('*')
+      .select('*, recordings(file_url)')
       .order('created_at', { ascending: false });
-    if (!error && data) setScans(data as unknown as ScanRecord[]);
+
+    if (!error && data) {
+      const mapped: ScanWithAudio[] = (data as any[]).map(row => ({
+        id: row.id,
+        recording_id: row.recording_id,
+        result: row.result,
+        result_title: row.result_title,
+        result_description: row.result_description,
+        condition_name: row.condition_name,
+        recommended_steps: row.recommended_steps,
+        created_at: row.created_at,
+        sent_to_kry: row.sent_to_kry,
+        file_url: row.recordings?.file_url ?? null,
+      }));
+      setScans(mapped);
+    }
     setLoading(false);
   };
 
@@ -43,7 +62,6 @@ const Dashboard = () => {
 
   return (
     <div className="flex flex-col gap-5 px-5 pb-28 pt-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-display text-2xl font-bold text-foreground">Beat Beat</h1>
@@ -54,7 +72,6 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Start Scan CTA */}
       <Button
         size="lg"
         className="w-full rounded-2xl py-8 text-lg font-bold shadow-md"
@@ -64,7 +81,6 @@ const Dashboard = () => {
         Start Scan
       </Button>
 
-      {/* Scan History */}
       <div>
         <h2 className="font-display text-lg font-semibold text-foreground">Scan History</h2>
         {loading ? (
@@ -105,6 +121,17 @@ const Dashboard = () => {
                         {scan.recommended_steps && (
                           <p className="text-sm"><strong className="text-foreground">Next steps:</strong> {scan.recommended_steps}</p>
                         )}
+
+                        {/* Audio playback */}
+                        {scan.file_url && (
+                          <div className="rounded-lg bg-background p-3" onClick={e => e.stopPropagation()}>
+                            <p className="mb-1.5 flex items-center gap-1 text-xs font-medium text-muted-foreground">
+                              <Play className="h-3 w-3" /> Recording
+                            </p>
+                            <audio controls src={scan.file_url} className="w-full" />
+                          </div>
+                        )}
+
                         {scan.result !== 'try_again' && (
                           <Button
                             variant="outline"
