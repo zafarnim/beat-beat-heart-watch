@@ -13,8 +13,8 @@ const BottomNav = () => {
   if (location.pathname === '/scan') return null;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-card/20 backdrop-blur-2xl border-t border-white/15 shadow-[0_-4px_30px_rgba(0,0,0,0.1)] safe-bottom">
-      <div className="mx-auto flex max-w-md items-center justify-around py-2">
+    <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 bg-card/20 backdrop-blur-2xl border border-white/15 shadow-[0_8px_32px_rgba(0,0,0,0.15)] rounded-2xl safe-bottom w-[calc(100%-2rem)] max-w-md">
+      <div className="flex items-center justify-around py-2 px-4">
         {tabs.map(({ path, icon: Icon, label }) => {
           const active = location.pathname === path;
           return (
