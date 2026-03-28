@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Heart, ChevronRight, Send, CheckCircle2, Play, Bell, AlertTriangle, HelpCircle } from 'lucide-react';
+import { Heart, ChevronRight, CheckCircle2, Play, Bell, AlertTriangle, HelpCircle } from 'lucide-react';
+import kryLogo from '@/assets/kry-logo.png';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
