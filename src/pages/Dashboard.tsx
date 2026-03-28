@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Heart, ChevronRight, CheckCircle2, Play, AlertTriangle, HelpCircle, Hospital, Settings } from 'lucide-react';
+import { useState, useEffect, useMemo } from 'react';
+import { Heart, ChevronRight, CheckCircle2, Play, AlertTriangle, HelpCircle, Hospital, Settings, Circle, CheckCircle } from 'lucide-react';
 import kryLogo from '@/assets/kry-logo.png';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
@@ -10,6 +10,31 @@ import { ScanRecord, ScanResultType } from '@/lib/types';
 interface ScanWithAudio extends ScanRecord {
   file_url?: string | null;
 }
+
+interface RecommendedStep {
+  scanId: string;
+  stepIndex: number;
+  text: string;
+  conditionName: string;
+  date: string;
+}
+
+const COMPLETED_STEPS_KEY = 'beatbeat_completed_steps';
+
+const getCompletedSteps = (): string[] => {
+  try {
+    return JSON.parse(localStorage.getItem(COMPLETED_STEPS_KEY) || '[]');
+  } catch { return []; }
+};
+
+const toggleCompletedStep = (key: string): string[] => {
+  const completed = getCompletedSteps();
+  const updated = completed.includes(key)
+    ? completed.filter(k => k !== key)
+    : [...completed, key];
+  localStorage.setItem(COMPLETED_STEPS_KEY, JSON.stringify(updated));
+  return updated;
+};
 
 const resultConfig: Record<ScanResultType, { label: string; labelClass: string; iconClass: string; icon: typeof Heart }> = {
   normal: { label: 'HEALTHY', labelClass: 'bg-success/15 text-success', iconClass: 'bg-success/15 text-success', icon: Heart },
@@ -23,6 +48,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [scans, setScans] = useState<ScanWithAudio[]>([]);
   const [loading, setLoading] = useState(true);
+  const [completedSteps, setCompletedSteps] = useState<string[]>(getCompletedSteps);
 
   useEffect(() => {
     fetchScans();
@@ -50,6 +76,34 @@ const Dashboard = () => {
       setScans(mapped);
     }
     setLoading(false);
+  };
+
+  const recommendedSteps = useMemo<RecommendedStep[]>(() => {
+    const steps: RecommendedStep[] = [];
+    scans
+      .filter(s => s.result === 'clear_classification' && s.recommended_steps)
+      .forEach(scan => {
+        const lines = scan.recommended_steps!
+          .split(/\n|;|(?:\d+\.\s)/)
+          .map(l => l.trim())
+          .filter(l => l.length > 0);
+        lines.forEach((text, i) => {
+          steps.push({
+            scanId: scan.id,
+            stepIndex: i,
+            text,
+            conditionName: scan.condition_name || 'Detected condition',
+            date: scan.created_at,
+          });
+        });
+      });
+    return steps;
+  }, [scans]);
+
+  const handleToggleStep = (scanId: string, stepIndex: number) => {
+    const key = `${scanId}_${stepIndex}`;
+    const updated = toggleCompletedStep(key);
+    setCompletedSteps(updated);
   };
 
   const sendToKry = async (id: string, e: React.MouseEvent) => {
@@ -89,7 +143,6 @@ const Dashboard = () => {
       {/* Hero CTA Card */}
       <div className="px-5 mb-8">
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-foreground via-foreground/90 to-muted-foreground p-6 pb-7">
-          {/* Subtle texture overlay */}
           <div className="absolute inset-0 opacity-10" style={{
             backgroundImage: 'radial-gradient(circle at 30% 50%, hsl(var(--accent)) 0%, transparent 60%)',
           }} />
@@ -113,6 +166,53 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+
+      {/* Recommended Steps */}
+      {recommendedSteps.length > 0 && (
+        <div className="mb-8">
+          <div className="flex items-center justify-between px-5 mb-3">
+            <h2 className="font-display text-lg font-bold text-foreground">Next Steps</h2>
+            <span className="text-xs font-medium text-muted-foreground">
+              {completedSteps.length}/{recommendedSteps.length} done
+            </span>
+          </div>
+          <div className="flex gap-3 overflow-x-auto px-5 pb-2 scrollbar-hide">
+            {recommendedSteps.map((step) => {
+              const key = `${step.scanId}_${step.stepIndex}`;
+              const isDone = completedSteps.includes(key);
+              return (
+                <button
+                  key={key}
+                  onClick={() => handleToggleStep(step.scanId, step.stepIndex)}
+                  className={`flex-shrink-0 w-56 rounded-2xl p-4 text-left transition-all ${
+                    isDone
+                      ? 'bg-success/10 border border-success/20'
+                      : 'bg-muted/30 border border-transparent hover:bg-muted/50'
+                  }`}
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="mt-0.5 shrink-0">
+                      {isDone ? (
+                        <CheckCircle className="h-5 w-5 text-success" />
+                      ) : (
+                        <Circle className="h-5 w-5 text-muted-foreground" />
+                      )}
+                    </div>
+                    <div className="min-w-0">
+                      <p className={`text-sm font-medium leading-snug ${isDone ? 'line-through text-muted-foreground' : 'text-foreground'}`}>
+                        {step.text}
+                      </p>
+                      <p className="text-[11px] text-muted-foreground mt-2 truncate">
+                        {step.conditionName}
+                      </p>
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Recent Activity */}
       <div className="px-5">
