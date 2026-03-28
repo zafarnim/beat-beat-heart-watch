@@ -17,22 +17,55 @@ type Phase = 'position' | 'recording' | 'analyzing' | 'result';
 
 const SCAN_DURATION = 15;
 
-function mockAnalyze(): { result: ScanResultType; title: string; description: string; condition?: string; steps?: string; bpm?: number; variability?: number } {
-  const roll = Math.random();
-  const bpm = Math.floor(60 + Math.random() * 30);
-  const variability = Math.floor(40 + Math.random() * 30);
-  if (roll < 0.5) return { result: 'normal', title: 'Normal Rhythm', description: 'Your heart rhythm appears normal. This reading indicates a stable cardiovascular state at this moment.', bpm, variability };
-  if (roll < 0.7) return { result: 'clear_classification', title: 'Irregular Pattern Detected', description: 'We detected a pattern consistent with atrial fibrillation.', condition: 'Atrial Fibrillation (AFib)', steps: 'Schedule an appointment with your doctor for an ECG confirmation within the next 2 weeks.', bpm, variability };
-  if (roll < 0.85) return { result: 'inconclusive', title: 'Inconclusive Reading', description: 'The recording shows some irregularities that need professional interpretation.', bpm, variability };
-  if (roll < 0.92) return { result: 'emergency', title: 'Urgent Pattern Detected', description: 'Critical irregularity detected. Seek immediate medical attention.', bpm, variability };
-  return { result: 'try_again', title: 'Poor Signal Quality', description: 'We could not capture a clear enough signal to analyze.' };
+const API_URL = import.meta.env.VITE_BEATBEAT_API_URL || 'http://localhost:8000';
+
+interface AnalysisResult {
+  result: ScanResultType;
+  title: string;
+  description: string;
+  condition?: string;
+  steps?: string;
+  bpm?: number;
+  variability?: number;
+}
+
+async function analyzeAudio(blob: Blob): Promise<AnalysisResult> {
+  const formData = new FormData();
+  formData.append('audio', blob, 'recording.webm');
+
+  try {
+    const response = await fetch(`${API_URL}/predict`, {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!response.ok) throw new Error(`API error: ${response.status}`);
+
+    const data = await response.json();
+    return {
+      result: data.result as ScanResultType,
+      title: data.result_title,
+      description: data.result_description,
+      condition: data.condition_name || undefined,
+      steps: data.recommended_steps || undefined,
+      bpm: data.bpm,
+      variability: data.variability,
+    };
+  } catch {
+    console.error('ML API unavailable, using fallback');
+    return {
+      result: 'try_again',
+      title: 'Analysis Unavailable',
+      description: 'Could not reach the analysis server. Please check your connection and try again.',
+    };
+  }
 }
 
 const Scan = () => {
   const navigate = useNavigate();
   const [phase, setPhase] = useState<Phase>('position');
   const [countdown, setCountdown] = useState(SCAN_DURATION);
-  const [analysisResult, setAnalysisResult] = useState<ReturnType<typeof mockAnalyze> | null>(null);
+  const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -108,8 +141,7 @@ const Scan = () => {
       if (recData) recordingId = recData.id;
     }
 
-    await new Promise(r => setTimeout(r, 2500));
-    const result = mockAnalyze();
+    const result = await analyzeAudio(blob);
     setAnalysisResult(result);
 
     if (result.result !== 'try_again') {
