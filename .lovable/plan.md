@@ -1,52 +1,85 @@
 
-# Beat Beat — Heart Rate Anomaly Detection App
+
+# Beat Beat — Full Flow Rebuild
 
 ## Overview
-A mobile-first web app for iPhone users to manually log heart rate readings and get alerted when anomalies are detected. All data stays on-device using localStorage.
+Restructure the app around the new 4-phase flow: Onboarding → Home (with scan history) → Scan (audio recording + analysis) → Results (5 branches). Remove the old manual BPM logging paradigm; the core interaction is now "scan your heartbeat via audio."
 
-## Branding
-- **Primary color**: Deep red/coral (#E54D4D-ish) — evokes heartbeat
-- **Accent**: Soft pink/white gradients
-- **Font feel**: Clean, medical-modern
-- **Logo area**: "Beat Beat" with a heart pulse icon
+## Database Changes
 
-## Pages & Features
+Add a `scans` table to replace the concept of manual readings. The existing `recordings` table stores raw audio files; `scans` ties a recording to an analysis result.
 
-### 1. Onboarding / Welcome Screen
-- Brief intro: "Track your heart. Catch what matters."
-- Set personal baseline: age, resting heart rate range
-- Stored locally
+```sql
+CREATE TYPE public.scan_result AS ENUM ('normal', 'clear_classification', 'inconclusive', 'emergency', 'try_again');
 
-### 2. Home Dashboard
-- **Current status card**: Last reading + status (Normal / Warning / Alert)
-- **Quick log button**: Large, prominent "Log Reading" FAB
-- **7-day mini chart**: Sparkline showing recent trend
-- **Anomaly count badge**: How many anomalies this week
+CREATE TABLE public.scans (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  recording_id uuid REFERENCES public.recordings(id) ON DELETE SET NULL,
+  result scan_result NOT NULL,
+  result_title text NOT NULL,
+  result_description text NOT NULL,
+  condition_name text,          -- for "clear classification" branch
+  recommended_steps text,       -- for clear / inconclusive
+  created_at timestamptz NOT NULL DEFAULT now(),
+  sent_to_kry boolean NOT NULL DEFAULT false
+);
 
-### 3. Log Heart Rate
-- Simple input: BPM number + optional note (e.g., "after exercise", "resting", "dizzy")
-- Timestamp auto-filled, editable
-- Instant feedback: green (normal), yellow (elevated), red (anomaly) based on user's baseline
+ALTER TABLE public.scans ENABLE ROW LEVEL SECURITY;
+-- Open RLS for now (no auth yet)
+CREATE POLICY "Anyone can insert scans" ON public.scans FOR INSERT TO public WITH CHECK (true);
+CREATE POLICY "Anyone can view scans" ON public.scans FOR SELECT TO public USING (true);
+CREATE POLICY "Anyone can update scans" ON public.scans FOR UPDATE TO public USING (true);
+```
 
-### 4. History & Trends
-- Interactive line chart of all readings (filterable: 7d, 30d, 90d, all)
-- Anomalous readings highlighted in red
-- Tap a reading to see details/notes
+## File Changes
 
-### 5. Anomaly Detection Logic
-- Flag readings outside personalized thresholds (e.g., ±20% from baseline)
-- Detect sudden spikes/drops between consecutive readings
-- Browser push notification when anomaly logged
+### 1. Update types — `src/lib/types.ts`
+- Add `ScanResult` type with the five branches and associated data.
+- Update `UserSettings` to include `sex` and `knownConditions` fields for the new onboarding.
 
-### 6. Settings
-- Edit baseline heart rate range
-- Set custom anomaly thresholds
-- Clear all data option
-- Enable/disable notifications
+### 2. Rewrite Onboarding — `src/pages/Onboarding.tsx`
+Three steps:
+1. **Welcome**: Value prop screen with Beat Beat branding and pulsing heart.
+2. **Profile**: Age, sex (select), known conditions (multi-select or text input).
+3. **Tutorial**: Illustration/text showing how to hold phone to chest for audio capture.
+All saved to localStorage. Marks `onboarded: true` on completion.
 
-## Technical Approach
-- **Storage**: localStorage for all readings and settings
-- **Charts**: Recharts for trend visualization
-- **Notifications**: Browser Notification API (with permission prompt)
-- **Mobile-first**: Designed for iPhone Safari, installable as PWA-ready layout
-- **No backend**: Fully client-side
+### 3. Rewrite Home Screen — `src/pages/Dashboard.tsx`
+- **Top**: Large "Start Scan" CTA button (navigates to `/scan`).
+- **Below**: Scan history list fetched from the `scans` table (most recent first).
+- Each entry shows: date, result summary (badge colored by result type), tap to expand details.
+- Expanded view shows full result description, condition info, and a "Send to Kry" button (mock action that sets `sent_to_kry = true`).
+
+### 4. New Scan Flow — `src/pages/Scan.tsx`
+Multi-step screen within a single page, using local state to progress:
+
+1. **Pre-scan positioning prompt**: Instructions on holding the phone. "Ready" button.
+2. **Recording phase**: Pulsing orb animation + countdown timer (e.g., 15 seconds). Uses `MediaRecorder` API (reuse logic from `Record.tsx`). Audio uploads to Supabase storage on stop.
+3. **Analyzing**: Loading spinner/animation while a mock analysis runs (~2-3 seconds timeout). In the future this would call an AI edge function, but for now it randomly picks a result branch for demo purposes.
+4. **Results**: Renders one of five result components based on the outcome.
+
+### 5. Result Components — `src/components/results/`
+Five sub-components, each rendered after analysis:
+
+- **NormalResult**: Reassuring message, "Scan again in 1 week" prompt, optional reminder notification toggle, saved to history.
+- **ClearClassificationResult**: Shows condition name + plain-language explanation, recommended next steps, "Send to Kry" button, saved to history.
+- **InconclusiveResult**: "Needs professional review" message, "Send to Kry" mock, saved as "pending review."
+- **EmergencyResult**: Red urgent screen, "Call Emergency Services" primary CTA (`tel:112`), "Share scan with responders" secondary, saved to history.
+- **TryAgainResult**: What went wrong + guidance, "Retry" button (resets scan flow), NOT saved to history.
+
+### 6. Update Navigation
+- **BottomNav**: Simplify to Home / Settings (scan is accessed via the Home CTA, not a tab).
+- **Routes in `App.tsx`**: Add `/scan` route. Remove `/log` and `/record` routes. Keep `/history` as an alias or remove it (history is now inline on home).
+
+### 7. Cleanup
+- Remove `src/pages/LogReading.tsx` (manual BPM entry — replaced by scan).
+- Remove `src/pages/Record.tsx` (standalone record page — merged into Scan).
+- Remove old `src/pages/History.tsx` (history now lives on Dashboard).
+- Keep `src/lib/anomaly.ts` for notification utilities; remove BPM classification functions that are no longer used.
+
+## Technical Notes
+- The scan analysis is **mocked** for now — it randomly assigns a result branch with weighted probability (mostly "normal"). This is the hook point for a future AI/ML edge function.
+- The "Send to Kry" action is a **mock** — it flips a flag in the database and shows a toast. No actual integration yet.
+- Audio recording reuses the existing `MediaRecorder` + Supabase storage upload pattern from `Record.tsx`.
+- The emergency CTA uses `window.open('tel:112')` for the call button.
+
