@@ -90,7 +90,8 @@ const LiveWaveform = ({ stream, isRecording, elapsed, duration }: LiveWaveformPr
       const startX = 0;
 
       const rootStyles = getComputedStyle(document.documentElement);
-      const destructive = rootStyles.getPropertyValue('--destructive').trim();
+      const foreground = rootStyles.getPropertyValue('--foreground').trim();
+      const mutedFg = rootStyles.getPropertyValue('--muted-foreground').trim();
 
       for (let i = 0; i < currentBarCount && i < totalBars; i++) {
         const x = startX + i * totalBarWidth;
