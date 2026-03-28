@@ -1,5 +1,6 @@
-import { Activity, Send, FileText } from 'lucide-react';
+import { Activity, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import kryLogo from '@/assets/kry-logo.png';
 
 interface Props {
   conditionName: string;
@@ -28,7 +29,7 @@ const ClearClassificationResult = ({ conditionName, description, steps, onSendTo
     </div>
 
     <Button size="lg" variant="outline" className="w-full rounded-full font-semibold py-6" onClick={onSendToKry}>
-      <Send className="mr-2 h-4 w-4" /> Send to Kry
+      <img src={kryLogo} alt="Kry" className="mr-2 h-5 w-5 rounded" /> Send to Kry
     </Button>
     <Button
       size="lg"
