@@ -43,10 +43,10 @@ const HealthStats = ({ scans }: HealthStatsProps) => {
       ? latestHrv >= 50 ? 'bg-success/10 text-success' : 'bg-destructive/10 text-destructive'
       : '';
 
-    return { avgBpm, bpmDiff, latestHrv, hrvStatus, hrvStatusClass };
+    return { latestBpm, latestHrv, hrvStatus, hrvStatusClass };
   }, [scans]);
 
-  const hasData = stats && (stats.avgBpm != null || stats.latestHrv != null);
+  const hasData = stats && (stats.latestBpm != null || stats.latestHrv != null);
 
   return (
     <div className="grid grid-cols-2 gap-3 px-5 mb-8">
