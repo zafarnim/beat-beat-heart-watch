@@ -144,9 +144,7 @@ const Dashboard = () => {
           </div>
           <h1 className="font-display text-xl font-bold text-foreground">Beat Beat</h1>
         </div>
-        <button onClick={() => navigate('/settings')} className="h-10 w-10 rounded-full flex items-center justify-center">
-          <Settings className="h-5 w-5 text-muted-foreground" />
-        </button>
+        <div className="w-10" />
       </div>
 
 
