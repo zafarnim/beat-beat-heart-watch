@@ -120,6 +120,53 @@ const Scan = () => {
     }
   }, []);
 
+  const handleFileUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const blob = new Blob([file], { type: file.type });
+    chunksRef.current = [blob];
+    startTimeRef.current = Date.now();
+
+    const localUrl = URL.createObjectURL(blob);
+    setAudioUrl(localUrl);
+    setPhase('analyzing');
+
+    const { data: { user } } = await supabase.auth.getUser();
+
+    const fileName = `scan_${Date.now()}.${file.name.split('.').pop() || 'wav'}`;
+    const { error: storageError } = await supabase.storage.from('recordings').upload(fileName, blob, { contentType: file.type });
+
+    let recordingId: string | null = null;
+    if (!storageError) {
+      const { data: urlData } = supabase.storage.from('recordings').getPublicUrl(fileName);
+      const { data: recData } = await supabase.from('recordings').insert({
+        file_path: fileName,
+        file_url: urlData.publicUrl,
+        duration_seconds: 0,
+        user_id: user?.id,
+      }).select('id').single();
+      if (recData) recordingId = recData.id;
+    }
+
+    const result = await analyzeAudio(blob);
+    setAnalysisResult(result);
+
+    if (result.result !== 'try_again') {
+      await supabase.from('scans').insert({
+        recording_id: recordingId,
+        result: result.result,
+        result_title: result.title,
+        result_description: result.description,
+        condition_name: result.condition || null,
+        recommended_steps: result.steps || null,
+        user_id: user?.id,
+      });
+    }
+
+    setPhase('result');
+  }, []);
+
   const handleAnalysis = async () => {
     setPhase('analyzing');
 
