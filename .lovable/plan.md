@@ -1,85 +1,63 @@
 
 
-# Beat Beat — Full Flow Rebuild
+# Liquid Glass Design System for Beat Beat
 
-## Overview
-Restructure the app around the new 4-phase flow: Onboarding → Home (with scan history) → Scan (audio recording + analysis) → Results (5 branches). Remove the old manual BPM logging paradigm; the core interaction is now "scan your heartbeat via audio."
+## What We're Building
+Apply a frosted glass / liquid glass aesthetic across all components and pages. This means translucent backgrounds, strong backdrop blurs, subtle borders with white/lavender opacity, and soft glowing shadows — creating a layered, depth-rich feel reminiscent of Apple's visionOS or iOS liquid glass style.
 
-## Database Changes
+## Approach
 
-Add a `scans` table to replace the concept of manual readings. The existing `recordings` table stores raw audio files; `scans` ties a recording to an analysis result.
+### 1. Global Glass Utilities — `src/index.css`
+Add reusable utility classes:
+- `.glass` — base frosted glass: `bg-white/10 backdrop-blur-xl border border-white/20 shadow-lg`
+- `.glass-card` — card variant with slightly more opacity and a subtle lavender tint
+- `.glass-strong` — higher opacity for prominent elements like CTAs
+- Adjust CSS variables: make `--card` and `--background` slightly more transparent-friendly
 
-```sql
-CREATE TYPE public.scan_result AS ENUM ('normal', 'clear_classification', 'inconclusive', 'emergency', 'try_again');
+### 2. Card Component — `src/components/ui/card.tsx`
+Replace the solid `bg-card` with glass styling: semi-transparent background (`bg-card/40`), `backdrop-blur-xl`, a thin `border border-white/15`, and a soft `shadow-lg shadow-black/5`.
 
-CREATE TABLE public.scans (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  recording_id uuid REFERENCES public.recordings(id) ON DELETE SET NULL,
-  result scan_result NOT NULL,
-  result_title text NOT NULL,
-  result_description text NOT NULL,
-  condition_name text,          -- for "clear classification" branch
-  recommended_steps text,       -- for clear / inconclusive
-  created_at timestamptz NOT NULL DEFAULT now(),
-  sent_to_kry boolean NOT NULL DEFAULT false
-);
+### 3. Bottom Navigation — `src/components/BottomNav.tsx`
+Already has `backdrop-blur-md`. Enhance with stronger blur (`backdrop-blur-2xl`), lower card opacity (`bg-card/30`), and a top border using `border-white/15`.
 
-ALTER TABLE public.scans ENABLE ROW LEVEL SECURITY;
--- Open RLS for now (no auth yet)
-CREATE POLICY "Anyone can insert scans" ON public.scans FOR INSERT TO public WITH CHECK (true);
-CREATE POLICY "Anyone can view scans" ON public.scans FOR SELECT TO public USING (true);
-CREATE POLICY "Anyone can update scans" ON public.scans FOR UPDATE TO public USING (true);
-```
+### 4. Button Component — `src/components/ui/button.tsx`
+- Primary variant: add a subtle glass sheen with `backdrop-blur-sm` and a light `shadow-lg`
+- Outline/ghost variants: use glass-like translucent backgrounds on hover
+- Add a new `glass` variant: fully transparent with blur and white border
 
-## File Changes
+### 5. Dashboard — `src/pages/Dashboard.tsx`
+- Add a subtle gradient background (lavender to transparent)
+- "Start Scan" CTA: glass-strong treatment with a soft glow shadow
+- Scan history cards already use `<Card>` so they inherit the glass card style
+- Badge components: add slight transparency
 
-### 1. Update types — `src/lib/types.ts`
-- Add `ScanResult` type with the five branches and associated data.
-- Update `UserSettings` to include `sex` and `knownConditions` fields for the new onboarding.
+### 6. Onboarding — `src/pages/Onboarding.tsx`
+- Add animated gradient orbs in the background for depth
+- Cards in profile/tutorial steps get glass treatment
+- Heart icon container: glass circle with glow
 
-### 2. Rewrite Onboarding — `src/pages/Onboarding.tsx`
-Three steps:
-1. **Welcome**: Value prop screen with Beat Beat branding and pulsing heart.
-2. **Profile**: Age, sex (select), known conditions (multi-select or text input).
-3. **Tutorial**: Illustration/text showing how to hold phone to chest for audio capture.
-All saved to localStorage. Marks `onboarded: true` on completion.
+### 7. Scan Page — `src/pages/Scan.tsx`
+- Position prompt card: glass panel
+- Recording phase: the pulsing orb already has translucency; enhance with blur rings
+- Analyzing phase: glass container around the loader
+- Result cards: glass treatment (they use inline styles, will wrap in glass containers)
 
-### 3. Rewrite Home Screen — `src/pages/Dashboard.tsx`
-- **Top**: Large "Start Scan" CTA button (navigates to `/scan`).
-- **Below**: Scan history list fetched from the `scans` table (most recent first).
-- Each entry shows: date, result summary (badge colored by result type), tap to expand details.
-- Expanded view shows full result description, condition info, and a "Send to Kry" button (mock action that sets `sent_to_kry = true`).
+### 8. Settings — `src/pages/Settings.tsx`
+- All setting cards get the glass treatment via the updated Card component
 
-### 4. New Scan Flow — `src/pages/Scan.tsx`
-Multi-step screen within a single page, using local state to progress:
+### 9. Background Treatment — `src/index.css` / Layout
+Add a subtle fixed background with soft gradient blobs (lavender/purple) to give the glass something to blur against, making the effect visible.
 
-1. **Pre-scan positioning prompt**: Instructions on holding the phone. "Ready" button.
-2. **Recording phase**: Pulsing orb animation + countdown timer (e.g., 15 seconds). Uses `MediaRecorder` API (reuse logic from `Record.tsx`). Audio uploads to Supabase storage on stop.
-3. **Analyzing**: Loading spinner/animation while a mock analysis runs (~2-3 seconds timeout). In the future this would call an AI edge function, but for now it randomly picks a result branch for demo purposes.
-4. **Results**: Renders one of five result components based on the outcome.
+## Technical Details
 
-### 5. Result Components — `src/components/results/`
-Five sub-components, each rendered after analysis:
-
-- **NormalResult**: Reassuring message, "Scan again in 1 week" prompt, optional reminder notification toggle, saved to history.
-- **ClearClassificationResult**: Shows condition name + plain-language explanation, recommended next steps, "Send to Kry" button, saved to history.
-- **InconclusiveResult**: "Needs professional review" message, "Send to Kry" mock, saved as "pending review."
-- **EmergencyResult**: Red urgent screen, "Call Emergency Services" primary CTA (`tel:112`), "Share scan with responders" secondary, saved to history.
-- **TryAgainResult**: What went wrong + guidance, "Retry" button (resets scan flow), NOT saved to history.
-
-### 6. Update Navigation
-- **BottomNav**: Simplify to Home / Settings (scan is accessed via the Home CTA, not a tab).
-- **Routes in `App.tsx`**: Add `/scan` route. Remove `/log` and `/record` routes. Keep `/history` as an alias or remove it (history is now inline on home).
-
-### 7. Cleanup
-- Remove `src/pages/LogReading.tsx` (manual BPM entry — replaced by scan).
-- Remove `src/pages/Record.tsx` (standalone record page — merged into Scan).
-- Remove old `src/pages/History.tsx` (history now lives on Dashboard).
-- Keep `src/lib/anomaly.ts` for notification utilities; remove BPM classification functions that are no longer used.
-
-## Technical Notes
-- The scan analysis is **mocked** for now — it randomly assigns a result branch with weighted probability (mostly "normal"). This is the hook point for a future AI/ML edge function.
-- The "Send to Kry" action is a **mock** — it flips a flag in the database and shows a toast. No actual integration yet.
-- Audio recording reuses the existing `MediaRecorder` + Supabase storage upload pattern from `Record.tsx`.
-- The emergency CTA uses `window.open('tel:112')` for the call button.
+Files to modify:
+- `src/index.css` — add glass utilities + background gradient blobs
+- `src/components/ui/card.tsx` — glass defaults
+- `src/components/ui/button.tsx` — glass variant + updated primary
+- `src/components/BottomNav.tsx` — enhanced glass nav
+- `src/pages/Dashboard.tsx` — glass CTA + subtle tweaks
+- `src/pages/Onboarding.tsx` — background orbs + glass cards
+- `src/pages/Scan.tsx` — glass containers for each phase
+- `src/pages/Settings.tsx` — minor tweaks (mostly inherits from Card)
+- `src/components/ui/badge.tsx` — slight transparency adjustments
 
