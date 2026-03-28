@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Heart, ChevronRight, HelpCircle, X, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import AgeDialSelector from '@/components/AgeDialSelector';
@@ -9,6 +10,7 @@ import onboardingHero from '@/assets/onboarding-hero.jpg';
 const CONDITIONS_SUGGESTIONS = ['Hypertension', 'Arrhythmia', 'Heart failure', 'Diabetes', 'Asthma'];
 
 const Onboarding = ({ onComplete }: { onComplete: () => void }) => {
+  const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [settings, setSettings] = useState<UserSettings>({ ...DEFAULT_SETTINGS });
   const [newCondition, setNewCondition] = useState('');
@@ -30,6 +32,7 @@ const Onboarding = ({ onComplete }: { onComplete: () => void }) => {
     settings.onboarded = true;
     saveSettings(settings);
     onComplete();
+    navigate('/scan');
   };
 
   const totalSteps = 3;
