@@ -15,7 +15,7 @@ const BottomNav = ({ visible = true }: BottomNavProps) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  if (location.pathname === '/scan' || location.pathname === '/auth') return null;
+  if (location.pathname !== '/') return null;
 
   return (
     <nav
