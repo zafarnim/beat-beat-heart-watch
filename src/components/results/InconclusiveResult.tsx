@@ -1,5 +1,6 @@
-import { HelpCircle, Send } from 'lucide-react';
+import { HelpCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import kryLogo from '@/assets/kry-logo.png';
 
 interface Props {
   onSendToKry: () => void;
