@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { ArrowLeft, Trash2 } from 'lucide-react';
+import { ArrowLeft, Trash2, LogOut } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -94,6 +95,22 @@ const Settings = () => {
           <p className="mt-2 text-center text-xs text-muted-foreground">
             This will permanently delete all settings.
           </p>
+        </CardContent>
+      </Card>
+
+      <Card className="mt-4 border-0 shadow-sm">
+        <CardContent className="pt-6">
+          <Button
+            variant="outline"
+            className="w-full rounded-full"
+            onClick={async () => {
+              await supabase.auth.signOut();
+              navigate('/');
+            }}
+          >
+            <LogOut className="mr-2 h-4 w-4" />
+            Log Out
+          </Button>
         </CardContent>
       </Card>
     </div>
