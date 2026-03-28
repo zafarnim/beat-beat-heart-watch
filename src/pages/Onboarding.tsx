@@ -36,13 +36,20 @@ const Onboarding = ({ onComplete }: { onComplete: () => void }) => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-background px-6">
+    <div className="flex min-h-screen flex-col items-center justify-center px-6 relative overflow-hidden">
+      {/* Animated gradient orbs for depth */}
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-32 -right-32 h-80 w-80 rounded-full bg-accent/30 blur-[100px] animate-pulse" />
+        <div className="absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-primary/10 blur-[80px] animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-96 w-96 rounded-full bg-accent/15 blur-[120px]" />
+      </div>
+
       {/* Step 0: Welcome */}
       {step === 0 && (
-        <div className="flex flex-col items-center gap-8 text-center animate-in fade-in duration-500">
+        <div className="relative flex flex-col items-center gap-8 text-center animate-in fade-in duration-500">
           <div className="relative">
-            <div className="absolute inset-0 rounded-full bg-accent/40 animate-pulse" />
-            <div className="flex h-28 w-28 items-center justify-center rounded-full bg-primary text-primary-foreground">
+            <div className="absolute inset-[-8px] rounded-full glass opacity-60 animate-pulse" />
+            <div className="relative flex h-28 w-28 items-center justify-center rounded-full glass-strong text-primary">
               <Heart className="h-14 w-14" />
             </div>
           </div>
@@ -63,11 +70,11 @@ const Onboarding = ({ onComplete }: { onComplete: () => void }) => {
 
       {/* Step 1: Profile */}
       {step === 1 && (
-        <div className="w-full max-w-sm animate-in slide-in-from-right duration-300">
+        <div className="relative w-full max-w-sm animate-in slide-in-from-right duration-300">
           <h2 className="font-display text-2xl font-bold text-foreground">About You</h2>
           <p className="mt-1 text-sm text-muted-foreground">Help us personalize your experience.</p>
 
-          <Card className="mt-6 border-0">
+          <Card className="mt-6">
             <CardContent className="space-y-5 pt-6">
               <div className="space-y-2">
                 <Label htmlFor="age">Age</Label>
@@ -120,13 +127,13 @@ const Onboarding = ({ onComplete }: { onComplete: () => void }) => {
 
       {/* Step 2: Tutorial */}
       {step === 2 && (
-        <div className="w-full max-w-sm animate-in slide-in-from-right duration-300">
+        <div className="relative w-full max-w-sm animate-in slide-in-from-right duration-300">
           <h2 className="font-display text-2xl font-bold text-foreground">How It Works</h2>
           <p className="mt-1 text-sm text-muted-foreground">Place your phone on your chest for the best reading.</p>
 
-          <Card className="mt-6 border-0">
+          <Card className="mt-6">
             <CardContent className="flex flex-col items-center gap-6 py-10">
-              <div className="flex h-24 w-24 items-center justify-center rounded-2xl bg-accent/50">
+              <div className="flex h-24 w-24 items-center justify-center rounded-2xl glass">
                 <Smartphone className="h-12 w-12 text-foreground" />
               </div>
               <div className="space-y-3 text-center text-sm text-muted-foreground">

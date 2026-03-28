@@ -15,9 +15,9 @@ interface ScanWithAudio extends ScanRecord {
 const resultStyles: Record<ScanResultType, { label: string; className: string }> = {
   normal: { label: 'Normal', className: 'bg-success/15 text-success border-success/30' },
   clear_classification: { label: 'Detected', className: 'bg-warning/15 text-warning border-warning/30' },
-  inconclusive: { label: 'Review Needed', className: 'bg-muted text-muted-foreground border-border' },
+  inconclusive: { label: 'Review Needed', className: 'bg-muted/60 text-muted-foreground border-border' },
   emergency: { label: 'Urgent', className: 'bg-destructive/15 text-destructive border-destructive/30' },
-  try_again: { label: 'Retry', className: 'bg-muted text-muted-foreground border-border' },
+  try_again: { label: 'Retry', className: 'bg-muted/60 text-muted-foreground border-border' },
 };
 
 const Dashboard = () => {
@@ -67,14 +67,14 @@ const Dashboard = () => {
           <h1 className="font-display text-2xl font-bold text-foreground">Beat Beat</h1>
           <p className="text-sm text-muted-foreground">Your heart, at a glance</p>
         </div>
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent/50">
+        <div className="flex h-10 w-10 items-center justify-center rounded-full glass">
           <Heart className="h-5 w-5 text-foreground" />
         </div>
       </div>
 
       <Button
         size="lg"
-        className="w-full rounded-2xl py-8 text-lg font-bold shadow-md"
+        className="w-full rounded-2xl py-8 text-lg font-bold glass-strong hover:shadow-xl transition-shadow"
         onClick={() => navigate('/scan')}
       >
         <Heart className="mr-2 h-6 w-6" />
@@ -86,7 +86,7 @@ const Dashboard = () => {
         {loading ? (
           <p className="mt-4 text-sm text-muted-foreground">Loading…</p>
         ) : scans.length === 0 ? (
-          <Card className="mt-3 border-0">
+          <Card className="mt-3">
             <CardContent className="py-8 text-center">
               <Heart className="mx-auto h-10 w-10 text-muted-foreground/30" />
               <p className="mt-3 text-sm text-muted-foreground">No scans yet. Start your first one!</p>
@@ -98,7 +98,7 @@ const Dashboard = () => {
               const style = resultStyles[scan.result];
               const isExpanded = expanded === scan.id;
               return (
-                <Card key={scan.id} className="border-0 cursor-pointer" onClick={() => setExpanded(isExpanded ? null : scan.id)}>
+                <Card key={scan.id} className="cursor-pointer" onClick={() => setExpanded(isExpanded ? null : scan.id)}>
                   <CardContent className="p-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
@@ -122,9 +122,8 @@ const Dashboard = () => {
                           <p className="text-sm"><strong className="text-foreground">Next steps:</strong> {scan.recommended_steps}</p>
                         )}
 
-                        {/* Audio playback */}
                         {scan.file_url && (
-                          <div className="rounded-lg bg-background p-3" onClick={e => e.stopPropagation()}>
+                          <div className="rounded-xl glass p-3" onClick={e => e.stopPropagation()}>
                             <p className="mb-1.5 flex items-center gap-1 text-xs font-medium text-muted-foreground">
                               <Play className="h-3 w-3" /> Recording
                             </p>

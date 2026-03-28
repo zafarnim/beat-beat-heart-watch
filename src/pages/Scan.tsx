@@ -79,12 +79,10 @@ const Scan = () => {
   const handleAnalysis = async () => {
     setPhase('analyzing');
 
-    // Create local playback URL
     const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
     const localUrl = URL.createObjectURL(blob);
     setAudioUrl(localUrl);
 
-    // Upload recording
     const fileName = `scan_${Date.now()}.webm`;
     const { error: storageError } = await supabase.storage.from('recordings').upload(fileName, blob, { contentType: 'audio/webm' });
 
@@ -140,7 +138,7 @@ const Scan = () => {
       <div className="flex flex-1 flex-col items-center justify-center">
         {phase === 'position' && (
           <div className="flex flex-col items-center gap-6 text-center animate-in fade-in duration-300">
-            <div className="flex h-24 w-24 items-center justify-center rounded-2xl bg-accent/50">
+            <div className="flex h-24 w-24 items-center justify-center rounded-2xl glass">
               <Smartphone className="h-12 w-12 text-foreground" />
             </div>
             <h2 className="font-display text-2xl font-bold text-foreground">Position Your Phone</h2>
@@ -156,9 +154,9 @@ const Scan = () => {
         {phase === 'recording' && (
           <div className="flex flex-col items-center gap-8 text-center animate-in fade-in duration-300">
             <div className="relative">
-              <div className="absolute inset-0 rounded-full bg-primary/10 animate-ping" style={{ animationDuration: '1.5s' }} />
-              <div className="absolute inset-[-12px] rounded-full bg-primary/5 animate-pulse" />
-              <div className="relative flex h-32 w-32 items-center justify-center rounded-full bg-primary/15">
+              <div className="absolute inset-[-24px] rounded-full glass opacity-30 animate-ping" style={{ animationDuration: '2s' }} />
+              <div className="absolute inset-[-12px] rounded-full glass opacity-50 animate-pulse" />
+              <div className="relative flex h-32 w-32 items-center justify-center rounded-full glass-strong">
                 <Heart className="h-14 w-14 text-primary animate-pulse" />
               </div>
             </div>
@@ -172,7 +170,9 @@ const Scan = () => {
 
         {phase === 'analyzing' && (
           <div className="flex flex-col items-center gap-6 text-center animate-in fade-in duration-300">
-            <Loader2 className="h-16 w-16 animate-spin text-primary" />
+            <div className="flex h-24 w-24 items-center justify-center rounded-full glass">
+              <Loader2 className="h-12 w-12 animate-spin text-primary" />
+            </div>
             <h2 className="font-display text-2xl font-bold text-foreground">Analyzing…</h2>
             <p className="text-sm text-muted-foreground">Processing your heartbeat recording.</p>
           </div>
@@ -194,9 +194,8 @@ const Scan = () => {
             {analysisResult.result === 'emergency' && <EmergencyResult onDone={() => navigate('/')} />}
             {analysisResult.result === 'try_again' && <TryAgainResult onRetry={resetScan} />}
 
-            {/* Audio playback after results */}
             {audioUrl && analysisResult.result !== 'try_again' && (
-              <div className="rounded-xl bg-card p-4">
+              <div className="rounded-2xl glass-card p-4">
                 <p className="mb-2 text-xs font-medium text-muted-foreground">Your Recording</p>
                 <audio controls src={audioUrl} className="w-full" />
               </div>
