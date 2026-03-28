@@ -98,6 +98,7 @@ const Onboarding = ({ onComplete }: { onComplete: () => void }) => {
             </svg>
             Continue with Google
           </Button>
+        </div>
       )}
 
       {/* Step 1: Profile */}
