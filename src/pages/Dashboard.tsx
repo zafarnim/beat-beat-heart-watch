@@ -79,6 +79,7 @@ const Dashboard = () => {
   };
 
   const recommendedSteps = useMemo<RecommendedStep[]>(() => {
+    const seen = new Set<string>();
     const steps: RecommendedStep[] = [];
     scans
       .filter(s => s.result === 'clear_classification' && s.recommended_steps)
@@ -88,6 +89,9 @@ const Dashboard = () => {
           .map(l => l.trim())
           .filter(l => l.length > 0);
         lines.forEach((text, i) => {
+          const normalized = text.toLowerCase();
+          if (seen.has(normalized)) return;
+          seen.add(normalized);
           steps.push({
             scanId: scan.id,
             stepIndex: i,
@@ -100,8 +104,12 @@ const Dashboard = () => {
     return steps;
   }, [scans]);
 
-  const handleToggleStep = (scanId: string, stepIndex: number) => {
-    const key = `${scanId}_${stepIndex}`;
+  const visibleSteps = useMemo(() => {
+    return recommendedSteps.filter(s => !completedSteps.includes(s.text.toLowerCase()));
+  }, [recommendedSteps, completedSteps]);
+
+  const handleToggleStep = (text: string) => {
+    const key = text.toLowerCase();
     const updated = toggleCompletedStep(key);
     setCompletedSteps(updated);
   };
@@ -168,43 +176,31 @@ const Dashboard = () => {
       </div>
 
       {/* Recommended Steps */}
-      {recommendedSteps.length > 0 && (
+      {visibleSteps.length > 0 && (
         <div className="mb-8">
           <div className="flex items-center justify-between px-5 mb-3">
             <h2 className="font-display text-lg font-bold text-foreground">Next Steps</h2>
             <span className="text-xs font-medium text-muted-foreground">
-              {completedSteps.length}/{recommendedSteps.length} done
+              {recommendedSteps.length - visibleSteps.length}/{recommendedSteps.length} done
             </span>
           </div>
           <div className="flex gap-2.5 overflow-x-auto px-5 pb-2 scrollbar-hide">
-            {recommendedSteps.map((step) => {
-              const key = `${step.scanId}_${step.stepIndex}`;
-              const isDone = completedSteps.includes(key);
-              return (
-                <button
-                  key={key}
-                  onClick={() => handleToggleStep(step.scanId, step.stepIndex)}
-                  className={`flex-shrink-0 w-48 rounded-xl px-3.5 py-3 text-left transition-all ${
-                    isDone
-                      ? 'bg-success/10 border border-success/20'
-                      : 'bg-muted/30 border border-transparent hover:bg-muted/50'
-                  }`}
-                >
-                  <div className="flex items-center gap-2.5">
-                    <div className="shrink-0">
-                      {isDone ? (
-                        <CheckCircle className="h-4 w-4 text-success" />
-                      ) : (
-                        <Circle className="h-4 w-4 text-muted-foreground/50" />
-                      )}
-                    </div>
-                    <p className={`text-xs font-medium leading-snug line-clamp-2 ${isDone ? 'line-through text-muted-foreground' : 'text-foreground'}`}>
-                      {step.text}
-                    </p>
+            {visibleSteps.map((step) => (
+              <button
+                key={`${step.scanId}_${step.stepIndex}`}
+                onClick={() => handleToggleStep(step.text)}
+                className="flex-shrink-0 w-48 rounded-xl px-3.5 py-3 text-left transition-all bg-muted/30 border border-transparent hover:bg-muted/50"
+              >
+                <div className="flex items-center gap-2.5">
+                  <div className="shrink-0">
+                    <Circle className="h-4 w-4 text-muted-foreground/50" />
                   </div>
-                </button>
-              );
-            })}
+                  <p className="text-xs font-medium leading-snug line-clamp-2 text-foreground">
+                    {step.text}
+                  </p>
+                </div>
+              </button>
+            ))}
           </div>
         </div>
       )}
