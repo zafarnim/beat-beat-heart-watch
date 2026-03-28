@@ -164,6 +164,8 @@ const Scan = () => {
         condition_name: result.condition || null,
         recommended_steps: result.steps || null,
         user_id: user?.id,
+        bpm: result.bpm ?? null,
+        hrv_ms: result.variability ?? null,
       });
     }
 
@@ -207,6 +209,8 @@ const Scan = () => {
         condition_name: result.condition || null,
         recommended_steps: result.steps || null,
         user_id: user?.id,
+        bpm: result.bpm ?? null,
+        hrv_ms: result.variability ?? null,
       });
     }
 

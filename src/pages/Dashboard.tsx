@@ -11,6 +11,8 @@ import { ScanRecord, ScanResultType } from '@/lib/types';
 
 interface ScanWithAudio extends ScanRecord {
   file_url?: string | null;
+  bpm?: number | null;
+  hrv_ms?: number | null;
 }
 
 interface RecommendedStep {
@@ -74,6 +76,8 @@ const Dashboard = () => {
         created_at: row.created_at,
         sent_to_kry: row.sent_to_kry,
         file_url: row.recordings?.file_url ?? null,
+        bpm: row.bpm ?? null,
+        hrv_ms: row.hrv_ms ?? null,
       }));
       setScans(mapped);
     }
@@ -180,7 +184,7 @@ const Dashboard = () => {
       </div>
 
       {/* Health Stats */}
-      <HealthStats scanDates={scans.map(s => s.created_at)} />
+      <HealthStats scans={scans} />
 
       {/* Recommended Steps */}
       {visibleSteps.length > 0 && (

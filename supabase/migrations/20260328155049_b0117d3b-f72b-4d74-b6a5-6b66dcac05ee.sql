@@ -1,0 +1,1 @@
+ALTER TABLE public.scans ADD COLUMN bpm numeric NULL, ADD COLUMN hrv_ms numeric NULL;

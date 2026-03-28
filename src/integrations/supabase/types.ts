@@ -70,8 +70,10 @@ export type Database = {
       }
       scans: {
         Row: {
+          bpm: number | null
           condition_name: string | null
           created_at: string
+          hrv_ms: number | null
           id: string
           recommended_steps: string | null
           recording_id: string | null
@@ -82,8 +84,10 @@ export type Database = {
           user_id: string | null
         }
         Insert: {
+          bpm?: number | null
           condition_name?: string | null
           created_at?: string
+          hrv_ms?: number | null
           id?: string
           recommended_steps?: string | null
           recording_id?: string | null
@@ -94,8 +98,10 @@ export type Database = {
           user_id?: string | null
         }
         Update: {
+          bpm?: number | null
           condition_name?: string | null
           created_at?: string
+          hrv_ms?: number | null
           id?: string
           recommended_steps?: string | null
           recording_id?: string | null
