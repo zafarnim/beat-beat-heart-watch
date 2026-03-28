@@ -213,7 +213,8 @@ const Settings = () => {
               className="w-full rounded-full"
               onClick={async () => {
                 await supabase.auth.signOut();
-                navigate('/');
+                clearAllData();
+                window.location.href = '/';
               }}
             >
               <LogOut className="mr-2 h-4 w-4" />
