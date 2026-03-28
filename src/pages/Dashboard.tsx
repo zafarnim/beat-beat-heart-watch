@@ -149,8 +149,6 @@ const Dashboard = () => {
         </button>
       </div>
 
-      {/* Week Streak */}
-      <WeekStreak scanDates={scans.map(s => s.created_at)} />
 
       {/* Hero CTA Card */}
       <div className="px-5 mb-8">
