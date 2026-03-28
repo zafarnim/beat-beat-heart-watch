@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Heart, ChevronRight, HelpCircle, X, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import AgeDialSelector from '@/components/AgeDialSelector';
