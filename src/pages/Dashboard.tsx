@@ -149,6 +149,9 @@ const Dashboard = () => {
         </button>
       </div>
 
+      {/* Week Streak */}
+      <WeekStreak scanDates={scans.map(s => s.created_at)} />
+
       {/* Hero CTA Card */}
       <div className="px-5 mb-8">
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-foreground via-foreground/90 to-muted-foreground p-6 pb-7">
