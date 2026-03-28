@@ -57,6 +57,7 @@ const App = () => {
                 <Routes>
                   <Route path="/" element={<Index />} />
                   <Route path="/scan" element={<Scan />} />
+                  <Route path="/scan/:id" element={<ScanDetail />} />
                   <Route path="/settings" element={<Settings />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
