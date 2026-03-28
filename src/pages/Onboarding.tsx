@@ -204,8 +204,12 @@ const Onboarding = ({ onComplete }: { onComplete: () => void }) => {
               { num: '01', text: 'Find a quiet spot and sit still.' },
               { num: '02', text: 'Place your phone flat against your chest, microphone side down.' },
               { num: '03', text: 'Stay calm and breathe normally during the scan.' },
-            ].map(({ num, text }) => (
-              <div key={num} className="flex gap-4 items-start">
+            ].map(({ num, text }, i) => (
+              <div
+                key={num}
+                className="flex gap-4 items-start opacity-0 animate-fade-in"
+                style={{ animationDelay: `${(i + 1) * 300}ms`, animationFillMode: 'forwards' }}
+              >
                 <span className="text-xs font-bold tracking-widest text-muted-foreground mt-1">{num}</span>
                 <p className="text-base text-foreground">{text}</p>
               </div>
