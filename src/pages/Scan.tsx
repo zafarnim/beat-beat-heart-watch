@@ -68,6 +68,7 @@ const Scan = () => {
   const [countdown, setCountdown] = useState(SCAN_DURATION);
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
