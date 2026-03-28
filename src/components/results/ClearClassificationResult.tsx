@@ -1,5 +1,6 @@
-import { Activity, Send, FileText } from 'lucide-react';
+import { Activity, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import kryLogo from '@/assets/kry-logo.png';
 
 interface Props {
   conditionName: string;
