@@ -10,13 +10,7 @@ interface WeekStreakProps {
 const WeekStreak = ({ scanDates }: WeekStreakProps) => {
   const { weekData, streakCount } = useMemo(() => {
     const today = new Date();
-    const dayOfWeek = today.getDay(); // 0=Sun
-    const todayIdx = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
-
-    const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
-    const monday = new Date(today);
-    monday.setDate(today.getDate() + mondayOffset);
-    monday.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
 
     const scanDateSet = new Set(
       scanDates.map(d => {
@@ -25,18 +19,21 @@ const WeekStreak = ({ scanDates }: WeekStreakProps) => {
       })
     );
 
-    const weekData = DAY_LABELS.map((label, i) => {
-      const date = new Date(monday);
-      date.setDate(monday.getDate() + i);
+    // Build 7 days starting from today
+    const weekData = DAY_LABELS_FULL.map((_, i) => {
+      const date = new Date(today);
+      date.setDate(today.getDate() + i);
       const key = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-      const isToday = date.toDateString() === today.toDateString();
-      const isFuture = date > today;
+      const isToday = i === 0;
       const completed = scanDateSet.has(key);
-      return { label, completed, isToday, isFuture };
+      const dayIdx = date.getDay(); // 0=Sun
+      const label = DAY_LABELS_FULL[dayIdx === 0 ? 6 : dayIdx - 1];
+      return { label, completed, isToday, isFuture: i > 0 };
     });
 
+    // Streak = consecutive completed days starting from today
     let streak = 0;
-    for (let i = todayIdx; i >= 0; i--) {
+    for (let i = 0; i < weekData.length; i++) {
       if (weekData[i].completed) streak++;
       else break;
     }
