@@ -17,7 +17,7 @@ type Phase = 'position' | 'recording' | 'analyzing' | 'result';
 
 const SCAN_DURATION = 15;
 
-const API_URL = import.meta.env.VITE_BEATBEAT_API_URL || 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_BEATBEAT_API_URL || 'https://hamed-2--beatbeat-api.modal.run';
 
 interface AnalysisResult {
   result: ScanResultType;
