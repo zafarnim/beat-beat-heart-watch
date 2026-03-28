@@ -9,6 +9,7 @@ import type { Session } from "@supabase/supabase-js";
 import Auth from "./pages/Auth";
 import Index from "./pages/Index";
 import Scan from "./pages/Scan";
+import ScanDetail from "./pages/ScanDetail";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import BottomNav from "./components/BottomNav";
@@ -56,6 +57,7 @@ const App = () => {
                 <Routes>
                   <Route path="/" element={<Index />} />
                   <Route path="/scan" element={<Scan />} />
+                  <Route path="/scan/:id" element={<ScanDetail />} />
                   <Route path="/settings" element={<Settings />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
