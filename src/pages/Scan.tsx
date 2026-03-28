@@ -12,6 +12,7 @@ import InconclusiveResult from '@/components/results/InconclusiveResult';
 import EmergencyResult from '@/components/results/EmergencyResult';
 import TryAgainResult from '@/components/results/TryAgainResult';
 import WaveformPlayer from '@/components/WaveformPlayer';
+import LiveWaveform from '@/components/LiveWaveform';
 
 type Phase = 'position' | 'ready' | 'recording' | 'analyzing' | 'result';
 
