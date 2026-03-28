@@ -19,6 +19,42 @@ const Onboarding = ({ onComplete }: { onComplete: () => void }) => {
   const [settings, setSettings] = useState<UserSettings>({ ...DEFAULT_SETTINGS });
   const [newCondition, setNewCondition] = useState('');
   const [showConditionInput, setShowConditionInput] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLogin, setIsLogin] = useState(true);
+  const [authLoading, setAuthLoading] = useState(false);
+
+  const handleEmailAuth = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setAuthLoading(true);
+    try {
+      if (isLogin) {
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        handleFinish();
+      } else {
+        const { error } = await supabase.auth.signUp({
+          email, password,
+          options: { emailRedirectTo: window.location.origin },
+        });
+        if (error) throw error;
+        toast.success('Check your email for a verification link!');
+      }
+    } catch (err: any) {
+      toast.error(err.message || 'Authentication failed');
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  const handleGoogle = async () => {
+    const { error } = await lovable.auth.signInWithOAuth("google", {
+      redirect_uri: window.location.origin,
+    });
+    if (error) {
+      toast.error("Google sign-in failed. Please try again.");
+    }
+  };
 
   const removeCondition = (c: string) => {
     setSettings({ ...settings, knownConditions: settings.knownConditions.filter(k => k !== c) });
