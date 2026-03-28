@@ -168,6 +168,7 @@ const WaveformPlayer = ({ audioUrl }: WaveformPlayerProps) => {
   }, [duration]);
 
   const formatTime = (t: number) => {
+    if (!isFinite(t) || isNaN(t)) return '00:00';
     const m = Math.floor(t / 60);
     const s = Math.floor(t % 60);
     return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
