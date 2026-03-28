@@ -15,7 +15,7 @@ const CONDITIONS_SUGGESTIONS = ['Hypertension', 'Arrhythmia', 'Heart failure', '
 
 const Onboarding = ({ onComplete }: { onComplete: () => void }) => {
   const navigate = useNavigate();
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState<number | string>(0);
   const [settings, setSettings] = useState<UserSettings>({ ...DEFAULT_SETTINGS });
   const [newCondition, setNewCondition] = useState('');
   const [showConditionInput, setShowConditionInput] = useState(false);
