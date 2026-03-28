@@ -261,7 +261,7 @@ const Dashboard = () => {
                     </div>
                     <p className="text-xs text-muted-foreground mt-0.5">{formatDate(scan.created_at)}</p>
                   </div>
-                  <div className="flex items-center gap-1 shrink-0">
+                  <div className="flex items-center gap-1 shrink-0 mt-1">
                     {scan.result !== 'try_again' && (
                       <button
                         onClick={(e) => sendToKry(scan.id, e)}
