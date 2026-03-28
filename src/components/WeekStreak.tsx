@@ -49,7 +49,7 @@ const WeekStreak = ({ scanDates }: WeekStreakProps) => {
     <div className="rounded-xl bg-primary-foreground/10 p-3">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <span className="text-xs font-semibold tracking-wider uppercase text-primary-foreground/60">
+          <span className="text-[10px] font-semibold tracking-wider uppercase text-primary-foreground/60">
             Weekly Streak
           </span>
         </div>
